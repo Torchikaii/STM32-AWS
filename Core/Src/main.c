@@ -112,9 +112,11 @@ int main(void)
     /* USER CODE END WHILE */
     MX_USB_HOST_Process();
 
-    HAL_GPIO_WritePin(LD6_GPIO_Port, LD6_Pin, GPIO_PIN_SET);
-
     /* USER CODE BEGIN 3 */
+    // Blink blue LED (LD6) with 1 second interval
+    HAL_GPIO_TogglePin(LD6_GPIO_Port, LD6_Pin); // Toggle blue LED
+    HAL_Delay(1000); // 1 second delay
+    /* USER CODE END 3 */
   }
   /* USER CODE END 3 */
 }
