@@ -164,7 +164,7 @@ single MCU has different `/Core/Src/` and `Core/Inc/` structures and files are
 named different names...
 
 The STM32 has indeed done some simplification: HAL (Hardware abstraction layer)
-functions. This means that no matter what MCU you're using this command will allways
+functions. This means that no matter what MCU youre using this command will allways
 yield same result:
 
 ```C
@@ -181,59 +181,4 @@ HAL_GPIO_WritePin(GPIOF, GPIO_PIN_5, GPIO_PIN_RESET);
  ```
 but in this case not all MCU have GPIOF, some only has GPIOA, GPIOB but not GPIOF,
 so you get the point that abstraction of hardware should be done for every single
-possible STM32 MCU if you want to get some results going.
-
----
-
-### What is RTOS ?
-
-RTOS (Real Time Operating System) is such OS that runs on embedded systems (for
-example MCUs) such that:
-- RTOS has tasks, while bare metal uses super loop.
-- The most important aspect of RTOS is that it provides predictable response times,
-which is crucial for applications where timing is critical, such as embedded systems
-in automotive, aerospace, and medical devices.
-- it supports multitasking, actually it's not multitasking because it quickly
-switches from one task to another (it's called multiplexing) and gives a feeling
-that all tasks are being done at the same time. Task is just a function in code.
-If your CPU has more than 1 core, then you can do real multitasking and do 2 RTOS
-tasks at once without multiplexing
-- Tasks can communicate with each other using semaphores and queues.
-
-while same RTOS can be installed on different variety of devices (STM32, Microchip,
-Atmel AVR, NXP LPC) and all of those devices would use same RTOS commands (like
-`sudo` in Linux), the contents of each RTOS task will have to be still written in
-code that MCU supports (for STM32 it will be HAL functions).
-
-some popular RTOS systems:
-- FreeRTOS
-- VxWorks
-- ThreadX
-- Zephyr
-- Linux on constrained devices
-
----
-
-### RTOS/STM32 debugging
- Initially when building STM32 project you don't just buy a single chip, but entire
- dev board that may include:
- - MCU chip itself
- - ST-Link chip that helps to connect MCU to PC
- - some LEDs for debugging
- - some buttons
- - USB ports, AUDIO DAC's (if any)
- - bradboard ready pins
-
-After you test your system on a breadboard, then you can start creating PCB with
-components you used and after having successful PCB you can start creating mass
-production devices.
-
-ST-Link chip is very nice tool, that can be bought separately (you're not gonna
-place ST-Link on every single production PCB as it's only used while debugging/
-development and not when system works well) it's sometimes also called "programmer".
-ST-Link chip can also be reflashed with SEGGER J-Link firmware which allows you
-to for example set up SEGGER SystemView app that can monitor all CPU instructions
-that it has ran, instruction by instruction, and if you're using FreeRTOS it can
-also show different RTOS tasks in different colors. However SEGGER middleware is
-super hard to install as you need to copy so much .c and .h files to your STM32
-project.
+posibble STM32 MCU if you want to get some results going.
