@@ -37,5 +37,4 @@ jobs:
       
       - name: Run STM32CubeMX
         run: |
-          apt install xvfb
           xvfb-run -a -s "-screen 0 1024x768x24"/opt/STM32CubeMX/STM32CubeMX -q script="$GITHUB_WORKSPACE/generate_script.txt"
