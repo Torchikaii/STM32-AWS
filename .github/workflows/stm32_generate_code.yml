@@ -1,0 +1,28 @@
+name: STM32 Code Generation
+
+on:
+  push:
+    branches:
+      - main  # Change this to your default branch if different
+      - doc/1-plan
+  pull_request:
+    branches:
+      - main  # Change this to your default branch if different
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create generate_script.txt
+        run: |
+          echo 'config load "/github/workspace/Initial_project/Initial_project.ioc"' > generate_script.txt
+          echo 'generate code "/github/workspace/Initial_project/"' >> generate_script.txt
+          echo 'exit' >> generate_script.txt
+
+      - name: Run STM32CubeMX
+        run: |
+          STM32CubeMX -q script=generate_script.txt
