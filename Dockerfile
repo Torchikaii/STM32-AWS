@@ -7,15 +7,18 @@ RUN apt-get update && \
 
 # Download STM32CubeMX installer
 WORKDIR /opt
-RUN wget https://stm32-cube-mx.s3.eu-central-1.amazonaws.com/en.SetupSTM32CubeMX-6.12.1-Win.zip -O stm32cubemx.zip
+
+COPY cubemx-auto.xml /tmp/cubemx-auto.xml
+
+RUN wget https://stm32-cube-mx.s3.eu-central-1.amazonaws.com/stm32cubemx-lin-v6-15-0.zip -O stm32cubemx.zip
 
 # Unzip and install CubeMX
 RUN unzip stm32cubemx.zip && \
-    chmod +x SetupSTM32CubeMX-*.linux && \
-    ./SetupSTM32CubeMX-*.linux --mode unattended
+    chmod +x SetupSTM32CubeMX-* && \
+    ./SetupSTM32CubeMX-6.15.0 -c --option-file /tmp/cubemx-auto.xml
 
 # Add CubeMX to PATH (adjust version as needed)
-ENV PATH="/root/STMicroelectronics/STM32Cube/STM32CubeMX:${PATH}"
+ENV PATH="/opt/STM32CubeMX:${PATH}"
 
 # Example: Command to run code generation (adjust .ioc path)
 # RUN STM32CubeMX -q -c <path_to_project.ioc>
