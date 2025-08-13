@@ -7,10 +7,10 @@ RUN apt-get update && \
 
 # Download STM32CubeMX installer
 WORKDIR /opt
-RUN wget https://stm32-cube-mx.s3.eu-central-1.amazonaws.com/en.SetupSTM32CubeMX-6.12.1-Win.zip
+RUN wget https://stm32-cube-mx.s3.eu-central-1.amazonaws.com/en.SetupSTM32CubeMX-6.12.1-Win.zip -O stm32cubemx.zip
 
 # Unzip and install CubeMX
-RUN unzip SetupSTM32CubeMX-6.12.1-Win.zip && \
+RUN unzip stm32cubemx.zip && \
     chmod +x SetupSTM32CubeMX-*.linux && \
     ./SetupSTM32CubeMX-*.linux --mode unattended
 
