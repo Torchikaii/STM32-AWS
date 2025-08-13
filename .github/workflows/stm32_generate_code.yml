@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/USER/REPO/TAG-runner:latest
+      image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
