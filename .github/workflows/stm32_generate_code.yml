@@ -8,7 +8,8 @@ on:
   pull_request:
     branches:
       - main  # Change this to your default branch if different
-workflow_dispatch:  # Allows manual triggering of the workflow
+
+  workflow_dispatch:  # Allows manual triggering of the workflow
 
 
 jobs:
@@ -25,9 +26,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Create generate_script.txt
+        shell: bash
         run: |
-          echo 'config load "/github/workspace/Initial_project/Initial_project.ioc"' > generate_script.txt
-          echo 'generate code "/github/workspace/Initial_project/"' >> generate_script.txt
+          PROJECT_ROOT="${{ github.workspace }}/Initial_project/"
+          echo 'config load "${PROJECT_ROOT}/Initial_project.ioc"' > generate_script.txt
+          echo 'generate code "${PROJECT_ROOT}"' >> generate_script.txt
           echo 'exit' >> generate_script.txt
 
       - name: Run STM32CubeMX
