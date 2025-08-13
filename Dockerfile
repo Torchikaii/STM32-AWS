@@ -7,7 +7,7 @@ RUN apt-get update && \
 
 # Download STM32CubeMX installer
 WORKDIR /opt
-RUN wget https://www.st.com/content/ccc/resource/technical/software/sw_development_suite/group0/10/71/68/2c/85/6f/49/82/stm32cubemx-lin_v6.9.2/files/stm32cubemx-lin_v6.9.2.zip/jcr:content/translations/en.stm32cubemx-lin_v6.9.2.zip -O stm32cubemx.zip
+RUN wget https://www.st.com/content/ccc/resource/technical/software/sw_development_suite/group0/10/71/68/2c/85/6f/49/82/stm32cubemx-lin_v6.15.0/files/stm32cubemx-lin_v6.15.0.zip/jcr:content/translations/en.stm32cubemx-lin_v6.15.0.zip -O stm32cubemx.zip
 
 # Unzip and install CubeMX
 RUN unzip stm32cubemx.zip && \
