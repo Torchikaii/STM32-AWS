@@ -35,8 +35,8 @@ jobs:
       - name: Create generate_script.txt
         shell: bash
         run: |
-          echo "config load \"${{ github.workspace }}/Initial_project.ioc\"" > generate_script.txt
-          echo "generate code \"${{ github.workspace }}\"" >> generate_script.txt
+          echo "config load \"Initial_project.ioc\"" > generate_script.txt
+          echo "generate code \".\"" >> generate_script.txt
           echo "exit" >> generate_script.txt
       - run: cat generate_script.txt
       - run: ls -la /opt/STM32CubeMX/
@@ -60,7 +60,7 @@ jobs:
       - name: Run STM32CubeMX
         timeout-minutes: 3 
         run: |
-          SCRIPT_PATH="$(realpath "${{ github.workspace }}/generate_script.txt")"
+          SCRIPT_PATH="$(realpath "generate_script.txt")"
           echo "Using SCRIPT_PATH=$SCRIPT_PATH"
           xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
 
