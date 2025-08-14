@@ -30,7 +30,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       
       - name: Create generate_script.txt
         shell: bash
@@ -40,7 +40,12 @@ jobs:
           echo "exit" >> generate_script.txt
       - run: cat generate_script.txt
       - run: ls -la /opt/STM32CubeMX/
-        # Restore CubeMX caches (preferences, finder DB, firmware packs)
+    
+      - name: Ensure dirs exist
+        run: |
+          mkdir -p "$HOME/.stm32cubemx" "$HOME/.stmcufinder" "$HOME/STM32Cube/Repository"
+          
+      # Restore CubeMX caches (preferences, finder DB, firmware packs)
       - name: Restore CubeMX cache
         uses: actions/cache@v4
         with:
@@ -52,10 +57,6 @@ jobs:
           restore-keys: |
             cubemx-${{ runner.os }}-6.15.0-
             cubemx-${{ runner.os }}-
-    
-      - name: Ensure dirs exist
-        run: |
-          mkdir -p "$HOME/.stm32cubemx" "$HOME/.stmcufinder" "$HOME/STM32Cube/Repository"
       - name: Run STM32CubeMX
         timeout-minutes: 3 
         run: |
