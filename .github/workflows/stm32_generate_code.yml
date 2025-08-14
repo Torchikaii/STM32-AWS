@@ -75,5 +75,5 @@ jobs:
             .cubemx_home/.stmcufinder/**        
             
       - name: Setup tmate session for debugging
-        if: env.DEBUG == 'true'
+        # if: env.DEBUG == 'true'
         uses: mxschmitt/action-tmate@v3
