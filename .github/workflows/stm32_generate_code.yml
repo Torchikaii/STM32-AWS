@@ -19,7 +19,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      DEBUG: true # ${{ github.event.inputs.debug }}
+      DEBUG: ${{ github.event.inputs.debug }}
       HOME: ${{ github.workspace }}/.cubemx_home
 
     container:
