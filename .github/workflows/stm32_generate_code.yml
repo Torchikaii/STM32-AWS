@@ -87,8 +87,8 @@ jobs:
       #       .cubemx_home/.stmcufinder/**        
             
       - name: Setup tmate session for debugging
-        # if: env.DEBUG == 'true'
-        if: always()
+        if: env.DEBUG == 'true'
+        # if: always()
         uses: mxschmitt/action-tmate@v3
         with:
           authorized_keys: |
