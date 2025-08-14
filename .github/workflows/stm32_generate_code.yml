@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEBUG: ${{ github.event.inputs.debug }}
+      HOME: ${{ github.workspace }}/.cubemx_home
+
     container:
       image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
       credentials:
@@ -40,12 +42,38 @@ jobs:
 
       - run: cat generate_script.txt
       - run: ls -la /opt/STM32CubeMX/
-      
+        # Restore CubeMX caches (preferences, finder DB, firmware packs)
+      - name: Restore CubeMX cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cubemx_home/.stm32cubemx
+            .cubemx_home/.stmcufinder
+            .cubemx_home/STM32Cube/Repository
+          key: cubemx-${{ runner.os }}-6.15.0-${{ hashFiles('**/*.ioc') }}
+          restore-keys: |
+            cubemx-${{ runner.os }}-6.15.0-
+            cubemx-${{ runner.os }}-
+    
+      - name: Ensure dirs exist
+        run: |
+          mkdir -p "$HOME/.stm32cubemx" "$HOME/.stmcufinder" "$HOME/STM32Cube/Repository"
+
       - name: Run STM32CubeMX
         timeout-minutes: 3 
         run: |
           xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q script=generate_script.txt
           
+      # Optional: upload logs for debugging
+      - name: Upload CubeMX logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cubemx-logs
+          path: |
+            .cubemx_home/.stm32cubemx/**
+            .cubemx_home/.stmcufinder/**        
+            
       - name: Setup tmate session for debugging
         if: env.DEBUG == 'true'
         uses: mxschmitt/action-tmate@v3
