@@ -10,11 +10,18 @@ on:
       - main  # Change this to your default branch if different
 
   workflow_dispatch:  # Allows manual triggering of the workflow
+    inputs:
+      debug:
+        description: 'Enable debugging'
+        required: false
+        default: 'false
 
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DEBUG: ${{ github.event.inputs.debug }}
     container:
       image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
       credentials:
