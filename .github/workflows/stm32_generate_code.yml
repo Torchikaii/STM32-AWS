@@ -1,4 +1,3 @@
-# noinspection GithubActionsModelInspection
 name: STM32 Code Generation
 
 on:
