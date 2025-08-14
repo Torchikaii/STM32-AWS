@@ -63,43 +63,7 @@ jobs:
           echo "Using SCRIPT_PATH=$SCRIPT_PATH"
           xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
           
-      # Optional: upload logs for debuggingname: STM32 Code Generation
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:
-    inputs:
-      debug:
-        description: 'Enable debugging (tmate session)'
-        required: false
-        default: 'false'
-      push_changes:
-        description: 'Auto-commit generated code to the current branch'
-        required: false
-        default: 'false'
-
-permissions:
-  contents: write  # needed only if push_changes=true
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    container:
-      image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    env:
-      CUBEMX_HOME: ${{ github.workspace }}/.cubemx_home
-      HOME: ${{ github.workspace }}/.cubemx_home
-      DEBUG: ${{ github.event.inputs.debug }}
-      CUBEMX_VERSION: "6.15.0"
-
+      # Optional: upload logs for debugging
       - name: Upload CubeMX logs
         if: always()
         uses: actions/upload-artifact@v4
