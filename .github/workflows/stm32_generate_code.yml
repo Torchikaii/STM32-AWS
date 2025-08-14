@@ -68,6 +68,8 @@ jobs:
       - name: Build firmware
         working-directory: .
         run: |
+          echo $PWD
+          la -la
           test -f Makefile || { echo "No Makefile. Set Toolchain/IDE=Makefile in the .ioc and regenerate."; exit 1; }
           make -j"$(nproc)" all
           make hex || true
