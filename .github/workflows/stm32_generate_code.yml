@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
+
       - name: Create generate_script.txt
         shell: bash
         run: |
@@ -52,17 +52,17 @@ jobs:
           restore-keys: |
             cubemx-${{ runner.os }}-6.15.0-
             cubemx-${{ runner.os }}-
-    
+
       - name: Ensure dirs exist
         run: |
           mkdir -p "$HOME/.stm32cubemx" "$HOME/.stmcufinder" "$HOME/STM32Cube/Repository"
       - name: Run STM32CubeMX
-        timeout-minutes: 3 
+        timeout-minutes: 20 
         run: |
           SCRIPT_PATH="$(realpath "$GITHUB_WORKSPACE/generate_script.txt")"
           echo "Using SCRIPT_PATH=$SCRIPT_PATH"
           xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
-          
+
       # Optional: upload logs for debugging
       - name: Upload CubeMX logs
         if: always()
@@ -71,8 +71,8 @@ jobs:
           name: cubemx-logs
           path: |
             .cubemx_home/.stm32cubemx/**
-            .cubemx_home/.stmcufinder/**        
-            
+            .cubemx_home/.stmcufinder/**
+
       - name: Setup tmate session for debugging
         if: env.DEBUG == 'true'
         # if: always()
