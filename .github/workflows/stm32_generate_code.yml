@@ -30,19 +30,17 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     env:
-      # Make HOME deterministic and cacheable
       CUBEMX_HOME: ${{ github.workspace }}/.cubemx_home
       HOME: ${{ github.workspace }}/.cubemx_home
       DEBUG: ${{ github.event.inputs.debug }}
       CUBEMX_VERSION: "6.15.0"
-      # for optional auto-commit step
       PUSH_CHANGES: ${{ github.event.inputs.push_changes }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # needed if we opt-in to commit back
+          fetch-depth: 0
           persist-credentials: true
 
       - name: Verify IOC file exists
@@ -57,7 +55,6 @@ jobs:
           mkdir -p "${CUBEMX_HOME}/.stm32cubemx" \
                    "${CUBEMX_HOME}/.stmcufinder" \
                    "${CUBEMX_HOME}/STM32Cube/Repository"
-          # Force Java/CubeMX to use our HOME
           echo "JAVA_TOOL_OPTIONS=-Duser.home=${CUBEMX_HOME}" >> "$GITHUB_ENV"
 
       - name: Cache CubeMX data (preferences, Finder DB, firmware packs)
@@ -77,11 +74,11 @@ jobs:
 
       - name: Create CubeMX script
         run: |
-          cat > "${GITHUB_WORKSPACE}/generate_script.txt" <<EOF
-config load "$(realpath "${GITHUB_WORKSPACE}/Initial_project.ioc")"
-generate code "$(realpath "${GITHUB_WORKSPACE}")"
-exit
-EOF
+          {
+            echo "config load \"$(realpath "${GITHUB_WORKSPACE}/Initial_project.ioc")\""
+            echo "generate code \"$(realpath "${GITHUB_WORKSPACE}")\""
+            echo "exit"
+          } > "${GITHUB_WORKSPACE}/generate_script.txt"
           echo "----- generate_script.txt -----"
           cat "${GITHUB_WORKSPACE}/generate_script.txt"
 
@@ -99,27 +96,19 @@ EOF
         run: |
           set -e
           ls -la "${GITHUB_WORKSPACE}"
-          # Check for some typical files CubeMX generates
-          test -f "${GITHUB_WORKSPACE}/Src/main.c" || {
-            echo "::error::Expected generated file Src/main.c not found."
-            exit 1
-          }
-          test -f "${GITHUB_WORKSPACE}/Inc/main.h" || {
-            echo "::error::Expected generated file Inc/main.h not found."
-            exit 1
-          }
+          test -f "${GITHUB_WORKSPACE}/Src/main.c" || { echo "::error::Expected Src/main.c not found"; exit 1; }
+          test -f "${GITHUB_WORKSPACE}/Inc/main.h" || { echo "::error::Expected Inc/main.h not found"; exit 1; }
           echo "Generation looks OK."
 
       - name: Build firmware (Makefile toolchain, optional)
         run: |
           set -e
           if [ ! -f Makefile ]; then
-            echo "No Makefile detected — skipping build. To enable builds, set Toolchain/IDE=Makefile in the .ioc and regenerate."
+            echo "No Makefile detected — skipping build. Set Toolchain/IDE=Makefile in the .ioc to enable."
             exit 0
           fi
           make -v || true
           make -j"$(nproc)" all
-          # Try common extras but don't fail if not present
           make hex || true
           make bin || true
           make size || true
@@ -128,9 +117,7 @@ EOF
         run: |
           set -e
           mkdir -p build_artifacts
-          # Common STM32 build outputs (adapt to your Makefile PRODUCT name if needed)
           find . -maxdepth 3 -type f \( -name "*.elf" -o -name "*.hex" -o -name "*.bin" -o -name "*.map" \) -print -exec cp -v {} build_artifacts/ \; || true
-          # Also keep Make logs if you have any
           ls -la build_artifacts || true
 
       - name: Upload artifacts (logs + firmware)
@@ -157,7 +144,6 @@ EOF
           git config user.email "ci-cubemx@users.noreply.github.com"
           git add -A
           git commit -m "chore(cubemx): regenerate code [skip ci]"
-          # push back to the same branch
           CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
           git push origin "$CURRENT_BRANCH"
 
