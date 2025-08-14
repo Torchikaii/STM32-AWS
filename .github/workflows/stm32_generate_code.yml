@@ -14,12 +14,12 @@ on:
       debug:
         description: 'Enable debugging'
         required: false
-        default: 'true'
+        default: 'false'
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      DEBUG: ${{ github.event.inputs.debug }}
+      DEBUG: true # ${{ github.event.inputs.debug }}
       HOME: ${{ github.workspace }}/.cubemx_home
 
     container:
