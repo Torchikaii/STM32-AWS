@@ -64,6 +64,15 @@ jobs:
           SCRIPT_PATH="$(realpath "$GITHUB_WORKSPACE/generate_script.txt")"
           echo "Using SCRIPT_PATH=$SCRIPT_PATH"
           xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
+        
+      - name: Build firmware
+        working-directory: $GITHUB_WORKSPACE
+        run: |
+          test -f Makefile || { echo "No Makefile. Set Toolchain/IDE=Makefile in the .ioc and regenerate."; exit 1; }
+          make -j"$(nproc)" all
+          make hex || true
+          make bin || true
+          make size || true  
           
       # Optional: upload logs for debugging
       - name: Upload CubeMX logs
