@@ -62,7 +62,9 @@ jobs:
       - name: Run STM32CubeMX
         timeout-minutes: 3 
         run: |
-          xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q script=generate_script.txt
+          SCRIPT_PATH="$(realpath "$GITHUB_WORKSPACE/generate_script.txt")"
+          echo "Using SCRIPT_PATH=$SCRIPT_PATH"
+          xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q script=$SCRIPT_PATH
           
       # Optional: upload logs for debugging
       - name: Upload CubeMX logs
@@ -76,4 +78,5 @@ jobs:
             
       - name: Setup tmate session for debugging
         # if: env.DEBUG == 'true'
+        if: always()
         uses: mxschmitt/action-tmate@v3
