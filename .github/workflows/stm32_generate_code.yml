@@ -41,25 +41,14 @@ jobs:
 
       - run: cat generate_script.txt
       - run: ls -la /opt/STM32CubeMX/
-        # Restore CubeMX caches (preferences, finder DB, firmware packs)
-      - name: Restore CubeMX cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .cubemx_home/.stm32cubemx
-            .cubemx_home/.stmcufinder
-            .cubemx_home/STM32Cube/Repository
-          key: cubemx-${{ runner.os }}-6.15.0-${{ hashFiles('**/*.ioc') }}
-          restore-keys: |
-            cubemx-${{ runner.os }}-6.15.0-
-            cubemx-${{ runner.os }}-
-    
+        
+      
       - name: Ensure dirs exist
         run: |
           mkdir -p "$HOME/.stm32cubemx" "$HOME/.stmcufinder" "$HOME/STM32Cube/Repository"
 
       - name: Run STM32CubeMX
-        timeout-minutes: 5
+        timeout-minutes: 7
         run: |
           SCRIPT_PATH="$(realpath "$GITHUB_WORKSPACE/generate_script.txt")"
           echo "Using SCRIPT_PATH=$SCRIPT_PATH"
@@ -85,11 +74,29 @@ jobs:
       #     path: |
       #       .cubemx_home/.stm32cubemx/**
       #       .cubemx_home/.stmcufinder/**        
-            
+ # Restore CubeMX caches (preferences, finder DB, firmware packs)
+      - name: Cache CubeMX data
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.stm32cubemx
+            ~/.stmcufinder
+          key: cubemx-db-${{ runner.os }}-v1
+
+      - name: Restore CubeMX cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cubemx_home/.stm32cubemx
+            .cubemx_home/.stmcufinder
+            .cubemx_home/STM32Cube/Repository
+          key: cubemx-${{ runner.os }}-6.15.0-${{ hashFiles('**/*.ioc') }}
+          restore-keys: |
+            cubemx-${{ runner.os }}-6.15.0-
+            cubemx-${{ runner.os }}-
+     
       - name: Setup tmate session for debugging
         if: env.DEBUG == 'true'
         # if: always()
         uses: mxschmitt/action-tmate@v3
-        with:
-          authorized_keys: |
-            ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPL+ype+UeQTvo6tKZGY/wrwwSUK4V/xoMQMvdHgPWVi justinas@biesas
+        
