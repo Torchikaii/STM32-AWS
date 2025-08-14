@@ -69,7 +69,7 @@ jobs:
         working-directory: .
         run: |
           echo $PWD
-          la -la
+          ls -la
           test -f Makefile || { echo "No Makefile. Set Toolchain/IDE=Makefile in the .ioc and regenerate."; exit 1; }
           make -j"$(nproc)" all
           make hex || true
@@ -77,16 +77,19 @@ jobs:
           make size || true  
           
       # Optional: upload logs for debugging
-      - name: Upload CubeMX logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cubemx-logs
-          path: |
-            .cubemx_home/.stm32cubemx/**
-            .cubemx_home/.stmcufinder/**        
+      # - name: Upload CubeMX logs
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: cubemx-logs
+      #     path: |
+      #       .cubemx_home/.stm32cubemx/**
+      #       .cubemx_home/.stmcufinder/**        
             
       - name: Setup tmate session for debugging
-        if: env.DEBUG == 'true'
-        # if: always()
+        # if: env.DEBUG == 'true'
+        if: always()
         uses: mxschmitt/action-tmate@v3
+        with:
+          authorized_keys: |
+            ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPL+ype+UeQTvo6tKZGY/wrwwSUK4V/xoMQMvdHgPWVi justinas@biesas
