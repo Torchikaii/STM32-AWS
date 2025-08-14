@@ -59,14 +59,14 @@ jobs:
           mkdir -p "$HOME/.stm32cubemx" "$HOME/.stmcufinder" "$HOME/STM32Cube/Repository"
 
       - name: Run STM32CubeMX
-        timeout-minutes: 3 
+        timeout-minutes: 5
         run: |
           SCRIPT_PATH="$(realpath "$GITHUB_WORKSPACE/generate_script.txt")"
           echo "Using SCRIPT_PATH=$SCRIPT_PATH"
           xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
         
       - name: Build firmware
-        working-directory: $GITHUB_WORKSPACE
+        working-directory: .
         run: |
           test -f Makefile || { echo "No Makefile. Set Toolchain/IDE=Makefile in the .ioc and regenerate."; exit 1; }
           make -j"$(nproc)" all
