@@ -21,6 +21,7 @@ jobs:
     env:
       DEBUG: ${{ github.event.inputs.debug }}
       HOME: ${GITHUB_WORKSPACE}/.cubemx_home
+      JAVA_TOOL_OPTIONS: -Duser.home=${GITHUB_WORKSPACE}/.cubemx_home
 
     container:
       image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
@@ -31,7 +32,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
+        
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ${{ env.HOME }}/.stm32cubemx
+            ${{ env.HOME }}/.stmcufinder
+            ${{ env.HOME }}/STM32Cube/Repository
+          key: cubemx-${{ runner.os }}-6.15.0-${{ hashFiles('**/*.ioc') }}
+          restore-keys: |
+            cubemx-${{ runner.os }}-6.15.0-
+            cubemx-${{ runner.os }}-
+            
       - name: Create generate_script.txt
         shell: bash
         run: |
@@ -48,7 +60,7 @@ jobs:
           mkdir -p "$HOME/.stm32cubemx" "$HOME/.stmcufinder" "$HOME/STM32Cube/Repository"
 
       - name: Run STM32CubeMX
-        timeout-minutes: 7
+        timeout-minutes: 20
         run: |
           SCRIPT_PATH="$(realpath "$GITHUB_WORKSPACE/generate_script.txt")"
           echo "Using SCRIPT_PATH=$SCRIPT_PATH"
@@ -73,27 +85,7 @@ jobs:
       #     name: cubemx-logs
       #     path: |
       #       .cubemx_home/.stm32cubemx/**
-      #       .cubemx_home/.stmcufinder/**        
- # Restore CubeMX caches (preferences, finder DB, firmware packs)
-      - name: Cache CubeMX data
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.stm32cubemx
-            ~/.stmcufinder
-          key: cubemx-db-${{ runner.os }}-v1
-
-      - name: Restore CubeMX cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .cubemx_home/.stm32cubemx
-            .cubemx_home/.stmcufinder
-            .cubemx_home/STM32Cube/Repository
-          key: cubemx-${{ runner.os }}-6.15.0-${{ hashFiles('**/*.ioc') }}
-          restore-keys: |
-            cubemx-${{ runner.os }}-6.15.0-
-            cubemx-${{ runner.os }}-
+      #       .cubemx_home/.stmcufinder/**
      
       - name: Setup tmate session for debugging
         if: env.DEBUG == 'true'
