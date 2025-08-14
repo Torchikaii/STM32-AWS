@@ -63,7 +63,7 @@ jobs:
         run: |
           SCRIPT_PATH="$(realpath "$GITHUB_WORKSPACE/generate_script.txt")"
           echo "Using SCRIPT_PATH=$SCRIPT_PATH"
-          xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "script $SCRIPT_PATH"
+          xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
           
       # Optional: upload logs for debugging
       - name: Upload CubeMX logs
