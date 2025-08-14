@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 # Install dependencies
 RUN apt-get update && \
-    apt-get install -y wget unzip openjdk-11-jre xvfb && \
+    apt-get install -y wget unzip openjdk-11-jre xvfb libgtk-3-0 && \
     rm -rf /var/lib/apt/lists/*
 
 # Download STM32CubeMX installer
