@@ -30,7 +30,7 @@ jobs:
       CUBEMX_VERSION: "6.15.0"
 
     container:
-      image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:6.15.0
+      image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
