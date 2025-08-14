@@ -2,6 +2,71 @@ name: STM32 Code Generation
 
 on:
   push:
+    branches:
+      - main  # Change this to your default branch if different
+#      - doc/1-plan
+  pull_request:
+    branches:
+      - main  # Change this to your default branch if different
+
+  workflow_dispatch:  # Allows manual triggering of the workflow
+    inputs:
+      debug:
+        description: 'Enable debugging'
+        required: false
+        default: 'false'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DEBUG: ${{ github.event.inputs.debug }}
+      HOME: ${GITHUB_WORKSPACE}/.cubemx_home
+
+    container:
+      image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Create generate_script.txt
+        shell: bash
+        run: |
+          echo "config load \"${GITHUB_WORKSPACE}/Initial_project.ioc\"" > generate_script.txt
+          echo "generate code \"${GITHUB_WORKSPACE}\"" >> generate_script.txt
+          echo "exit" >> generate_script.txt
+      - run: cat generate_script.txt
+      - run: ls -la /opt/STM32CubeMX/
+        # Restore CubeMX caches (preferences, finder DB, firmware packs)
+      - name: Restore CubeMX cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cubemx_home/.stm32cubemx
+            .cubemx_home/.stmcufinder
+            .cubemx_home/STM32Cube/Repository
+          key: cubemx-${{ runner.os }}-6.15.0-${{ hashFiles('**/*.ioc') }}
+          restore-keys: |
+            cubemx-${{ runner.os }}-6.15.0-
+            cubemx-${{ runner.os }}-
+    
+      - name: Ensure dirs exist
+        run: |
+          mkdir -p "$HOME/.stm32cubemx" "$HOME/.stmcufinder" "$HOME/STM32Cube/Repository"
+      - name: Run STM32CubeMX
+        timeout-minutes: 3 
+        run: |
+          SCRIPT_PATH="$(realpath "$GITHUB_WORKSPACE/generate_script.txt")"
+          echo "Using SCRIPT_PATH=$SCRIPT_PATH"
+          xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
+          
+      # Optional: upload logs for debuggingname: STM32 Code Generation
+
+on:
+  push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
@@ -34,119 +99,17 @@ jobs:
       HOME: ${{ github.workspace }}/.cubemx_home
       DEBUG: ${{ github.event.inputs.debug }}
       CUBEMX_VERSION: "6.15.0"
-      PUSH_CHANGES: ${{ github.event.inputs.push_changes }}
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: true
-
-      - name: Verify IOC file exists
-        run: |
-          test -f "${GITHUB_WORKSPACE}/Initial_project.ioc" || {
-            echo "::error::Initial_project.ioc not found at ${GITHUB_WORKSPACE}/Initial_project.ioc"
-            exit 1
-          }
-
-      - name: Prepare CubeMX HOME
-        run: |
-          mkdir -p "${CUBEMX_HOME}/.stm32cubemx" \
-                   "${CUBEMX_HOME}/.stmcufinder" \
-                   "${CUBEMX_HOME}/STM32Cube/Repository"
-          echo "JAVA_TOOL_OPTIONS=-Duser.home=${CUBEMX_HOME}" >> "$GITHUB_ENV"
-
-      - name: Cache CubeMX data (preferences, Finder DB, firmware packs)
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{ env.CUBEMX_HOME }}/.stm32cubemx
-            ${{ env.CUBEMX_HOME }}/.stmcufinder
-            ${{ env.CUBEMX_HOME }}/STM32Cube/Repository
-          key: cubemx-${{ runner.os }}-${{ env.CUBEMX_VERSION }}-${{ hashFiles('**/*.ioc') }}
-          restore-keys: |
-            cubemx-${{ runner.os }}-${{ env.CUBEMX_VERSION }}-
-            cubemx-${{ runner.os }}-
-
-      - name: Show CubeMX install
-        run: ls -la /opt/STM32CubeMX
-
-      - name: Create CubeMX script
-        run: |
-          {
-            echo "config load \"$(realpath "${GITHUB_WORKSPACE}/Initial_project.ioc")\""
-            echo "generate code \"$(realpath "${GITHUB_WORKSPACE}")\""
-            echo "exit"
-          } > "${GITHUB_WORKSPACE}/generate_script.txt"
-          echo "----- generate_script.txt -----"
-          cat "${GITHUB_WORKSPACE}/generate_script.txt"
-
-      - name: Run STM32CubeMX (headless)
-        timeout-minutes: 15
-        run: |
-          echo "HOME=$HOME"
-          echo "JAVA_TOOL_OPTIONS=$JAVA_TOOL_OPTIONS"
-          SCRIPT_PATH="$(realpath "${GITHUB_WORKSPACE}/generate_script.txt")"
-          echo "Using SCRIPT_PATH=${SCRIPT_PATH}"
-          set -euo pipefail
-          xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "${SCRIPT_PATH}"
-
-      - name: Verify generated output exists
-        run: |
-          set -e
-          ls -la "${GITHUB_WORKSPACE}"
-          test -f "${GITHUB_WORKSPACE}/Src/main.c" || { echo "::error::Expected Src/main.c not found"; exit 1; }
-          test -f "${GITHUB_WORKSPACE}/Inc/main.h" || { echo "::error::Expected Inc/main.h not found"; exit 1; }
-          echo "Generation looks OK."
-
-      - name: Build firmware (Makefile toolchain, optional)
-        run: |
-          set -e
-          if [ ! -f Makefile ]; then
-            echo "No Makefile detected — skipping build. Set Toolchain/IDE=Makefile in the .ioc to enable."
-            exit 0
-          fi
-          make -v || true
-          make -j"$(nproc)" all
-          make hex || true
-          make bin || true
-          make size || true
-
-      - name: Collect build artifacts (if present)
-        run: |
-          set -e
-          mkdir -p build_artifacts
-          find . -maxdepth 3 -type f \( -name "*.elf" -o -name "*.hex" -o -name "*.bin" -o -name "*.map" \) -print -exec cp -v {} build_artifacts/ \; || true
-          ls -la build_artifacts || true
-
-      - name: Upload artifacts (logs + firmware)
+      - name: Upload CubeMX logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: stm32-output-${{ github.run_id }}
+          name: cubemx-logs
           path: |
-            ${{ env.CUBEMX_HOME }}/.stm32cubemx/**
-            ${{ env.CUBEMX_HOME }}/.stmcufinder/**
-            build_artifacts/**
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Auto-commit generated changes (opt-in)
-        if: ${{ github.event_name == 'push' && env.PUSH_CHANGES == 'true' }}
-        run: |
-          set -e
-          if git diff --quiet && git diff --cached --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
-          git config user.name  "ci-cubemx"
-          git config user.email "ci-cubemx@users.noreply.github.com"
-          git add -A
-          git commit -m "chore(cubemx): regenerate code [skip ci]"
-          CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
-          git push origin "$CURRENT_BRANCH"
-
-      - name: Setup tmate session (debug)
+            .cubemx_home/.stm32cubemx/**
+            .cubemx_home/.stmcufinder/**        
+            
+      - name: Setup tmate session for debugging
         if: env.DEBUG == 'true'
+        # if: always()
         uses: mxschmitt/action-tmate@v3
