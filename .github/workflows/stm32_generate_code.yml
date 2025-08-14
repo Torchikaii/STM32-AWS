@@ -35,9 +35,8 @@ jobs:
       - name: Create generate_script.txt
         shell: bash
         run: |
-          PROJECT_ROOT="${{ github.workspace }}"
-          echo "config load \"${PROJECT_ROOT}/Initial_project.ioc\"" > generate_script.txt
-          echo "generate code \"${PROJECT_ROOT}\"" >> generate_script.txt
+          echo "config load \"${GITHUB_WORKSPACE}/Initial_project.ioc\"" > generate_script.txt
+          echo "generate code \"${GITHUB_WORKSPACE}\"" >> generate_script.txt
           echo "exit" >> generate_script.txt
 
       - run: cat generate_script.txt
