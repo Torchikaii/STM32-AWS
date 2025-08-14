@@ -36,5 +36,10 @@ jobs:
       - run: ls -la /opt/STM32CubeMX/
       
       - name: Run STM32CubeMX
+        timeout-minutes: 3 
         run: |
           xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q script="$GITHUB_WORKSPACE/generate_script.txt"
+          
+      - name: Setup tmate session for debugging
+        if: env.DEBUG == 'true'
+        uses: mxschmitt/action-tmate@v3
