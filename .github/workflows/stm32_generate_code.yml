@@ -1,0 +1,55 @@
+name: STM32 Code Generation
+
+on:
+  push:
+    branches:
+      - main  # Change this to your default branch if different
+  #      - doc/1-plan
+  pull_request:
+    branches:
+      - main  # Change this to your default branch if different
+
+  workflow_dispatch:  # Allows manual triggering of the workflow
+    inputs:
+      debug:
+        description: 'Enable debugging'
+        required: false
+        default: 'false'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DEBUG: ${{ github.event.inputs.debug }}
+
+    container:
+      image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create generate_script.txt
+        shell: bash
+        run: |
+          echo "config load \"${GITHUB_WORKSPACE}/Initial_project.ioc\"" > generate_script.txt
+          echo "generate code \"${GITHUB_WORKSPACE}\"" >> generate_script.txt
+          echo "exit" >> generate_script.txt
+      - run: cat generate_script.txt
+      - run: echo $PWD
+      - name: Run STM32CubeMX
+        timeout-minutes: 3
+        run: |
+          SCRIPT_PATH="$(realpath "$GITHUB_WORKSPACE/generate_script.txt")"
+          echo "Using SCRIPT_PATH=$SCRIPT_PATH"
+          echo "Using HOME=$HOME"
+          echo "Using GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          echo "Using PWD=$PWD"
+          xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
+
+      - name: Setup tmate session for debugging
+        if: env.DEBUG == 'true'
+        # if: always()
+        uses: mxschmitt/action-tmate@v3
