@@ -66,6 +66,7 @@ jobs:
           xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
         
       - name: Build firmware
+        working-directory: $GITHUB_WORKSPACE
         run: |
           test -f Makefile || { echo "No Makefile. Set Toolchain/IDE=Makefile in the .ioc and regenerate."; exit 1; }
           make -j"$(nproc)" all
@@ -84,6 +85,6 @@ jobs:
             .cubemx_home/.stmcufinder/**        
             
       - name: Setup tmate session for debugging
-        if: env.DEBUG == 'true'
-        # if: always()
+        # if: env.DEBUG == 'true'
+        if: always()
         uses: mxschmitt/action-tmate@v3
