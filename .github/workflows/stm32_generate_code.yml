@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEBUG: ${{ github.event.inputs.debug }}
-      HOME: ${{ github.workspace }}/.cubemx_home
+      CUBEMX_HOME: ${{ github.workspace }}/.cubemx_home
 
     container:
       image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
@@ -43,7 +43,7 @@ jobs:
     
       - name: Ensure dirs exist
         run: |
-          mkdir -p "$HOME/.stm32cubemx" "$HOME/.stmcufinder" "$HOME/STM32Cube/Repository"
+          mkdir -p "$CUBEMX_HOME/.stm32cubemx" "$CUBEMX_HOME/.stmcufinder" "$CUBEMX_HOME/STM32Cube/Repository"
           
       # Restore CubeMX caches (preferences, finder DB, firmware packs)
       - name: Restore CubeMX cache
