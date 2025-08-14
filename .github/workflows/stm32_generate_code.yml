@@ -2,8 +2,8 @@ name: STM32 Code Generation
 
 on:
   push:
-#    branches:
-#      - main  # Change this to your default branch if different
+    branches:
+      - main  # Change this to your default branch if different
 #      - doc/1-plan
   pull_request:
     branches:
