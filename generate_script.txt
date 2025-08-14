@@ -1,3 +1,0 @@
-config load "/github/workspace/Initial_project/Initial_project.ioc"
-generate code "/github/workspace/Initial_project/"
-exit
