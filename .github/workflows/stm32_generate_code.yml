@@ -1,3 +1,4 @@
+# noinspection GithubActionsModelInspection
 name: STM32 Code Generation
 
 on:
@@ -20,7 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEBUG: ${{ github.event.inputs.debug }}
-      HOME: ${GITHUB_WORKSPACE}/.cubemx_home
 
     container:
       image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
@@ -30,7 +30,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Create generate_script.txt
         shell: bash
@@ -44,15 +44,17 @@ jobs:
       - name: Ensure dirs exist
         run: |
           mkdir -p "$HOME/.stm32cubemx" "$HOME/.stmcufinder" "$HOME/STM32Cube/Repository"
+          echo "HOME is: $HOME"
+          ls -la $HOME
           
       # Restore CubeMX caches (preferences, finder DB, firmware packs)
       - name: Restore CubeMX cache
         uses: actions/cache@v4
         with:
           path: |
-            .cubemx_home/.stm32cubemx
-            .cubemx_home/.stmcufinder
-            .cubemx_home/STM32Cube/Repository
+            /github/home/.stm32cubemx
+            /github/home/.stmcufinder
+            /github/home/STM32Cube/Repository
           key: cubemx-${{ runner.os }}-6.15.0-${{ hashFiles('**/*.ioc') }}
           restore-keys: |
             cubemx-${{ runner.os }}-6.15.0-
@@ -71,8 +73,8 @@ jobs:
         with:
           name: cubemx-logs
           path: |
-            .cubemx_home/.stm32cubemx/**
-            .cubemx_home/.stmcufinder/**        
+            /github/home/.stm32cubemx/**
+            /github/home/.stmcufinder/**        
 
       - name: Setup tmate session for debugging
         if: env.DEBUG == 'true'
