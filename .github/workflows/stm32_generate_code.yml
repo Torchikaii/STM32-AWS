@@ -14,7 +14,7 @@ on:
       debug:
         description: 'Enable debugging'
         required: false
-        default: 'false'
+        default: 'true'
 jobs:
   build:
     runs-on: ubuntu-latest
