@@ -15,6 +15,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
     env:
       DEBUG: ${{ github.event.inputs.debug }}
 
@@ -28,24 +32,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Prepare a HOME inside the repo workspace so CubeMX writes there
-      - name: Set HOME for CubeMX
-        shell: bash
+      - name: Prepare CubeMX HOME
         run: |
-          echo "HOME=${GITHUB_WORKSPACE}/.cubemx_home" >> "$GITHUB_ENV"
-          echo "JAVA_TOOL_OPTIONS=-Duser.home=${GITHUB_WORKSPACE}/.cubemx_home" >> "$GITHUB_ENV"
-          mkdir -p "${GITHUB_WORKSPACE}/.cubemx_home/.stm32cubemx" \
-                   "${GITHUB_WORKSPACE}/.cubemx_home/.stmcufinder" \
-                   "${GITHUB_WORKSPACE}/.cubemx_home/STM32Cube/Repository"
+          CUBEMX_HOME="${GITHUB_WORKSPACE}/.cubemx_home"
+          echo "HOME=${CUBEMX_HOME}" >> "$GITHUB_ENV"
+          echo "JAVA_TOOL_OPTIONS=-Duser.home=${CUBEMX_HOME}" >> "$GITHUB_ENV"
+          mkdir -p "${CUBEMX_HOME}/.stm32cubemx" \
+                   "${CUBEMX_HOME}/.stmcufinder" \
+                   "${CUBEMX_HOME}/STM32Cube/Repository"
 
-      - name: Show env after HOME export
-        shell: bash
-        run: |
-          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-          echo "HOME=$HOME (this step still shows old HOME; next steps use the new one)"
-          echo "JAVA_TOOL_OPTIONS=$JAVA_TOOL_OPTIONS"
-
-      # Cache CubeMX data so subsequent runs are fast and quiet
       - name: Cache CubeMX data
         uses: actions/cache@v4
         with:
@@ -59,18 +54,50 @@ jobs:
             cubemx-${{ runner.os }}-
 
       - name: Create generate_script.txt
-        shell: bash
         run: |
-          {
-            echo "config load \"${GITHUB_WORKSPACE}/Initial_project.ioc\""
-            echo "generate code \"${GITHUB_WORKSPACE}\""
-            echo "exit"
-          } > generate_script.txt
+          cat > generate_script.txt <<'EOF'
+          config load "${GITHUB_WORKSPACE}/Initial_project.ioc"
+          generate code "${GITHUB_WORKSPACE}"
+          exit
+          EOF
           cat generate_script.txt
 
       - name: Show CubeMX install
-        run: ls -la /opt/STM32CubeMX/
+        run: ls -la /opt/STM32CubeMX
 
       - name: Run STM32CubeMX (headless)
         env:
-          HOME: ${{ github.workspace }}/.c
+          HOME: ${{ github.workspace }}/.cubemx_home
+          JAVA_TOOL_OPTIONS: -Duser.home=${{ github.workspace }}/.cubemx_home
+        run: |
+          echo "HOME=$HOME"
+          echo "JAVA_TOOL_OPTIONS=$JAVA_TOOL_OPTIONS"
+          SCRIPT_PATH="$(realpath "$GITHUB_WORKSPACE/generate_script.txt")"
+          echo "Using SCRIPT_PATH=$SCRIPT_PATH"
+          xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
+        timeout-minutes: 25
+
+      - name: Build firmware (Makefile)
+        run: |
+          ls -la
+          if [ ! -f Makefile ]; then
+            echo "No Makefile. Set Toolchain/IDE=Makefile in the .ioc and regenerate."
+            exit 1
+          fi
+          make -j"$(nproc)" all
+          make hex || true
+          make bin || true
+          make size || true
+
+      - name: Upload CubeMX logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cubemx-logs
+          path: |
+            ${{ github.workspace }}/.cubemx_home/.stm32cubemx/**
+            ${{ github.workspace }}/.cubemx_home/.stmcufinder/**
+
+      - name: Setup tmate session for debugging
+        if: env.DEBUG == 'true'
+        uses: mxschmitt/action-tmate@v3
