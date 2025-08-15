@@ -34,9 +34,12 @@ jobs:
       - name: Create generate_script.txt
         shell: bash
         run: |
-          echo "config load \"${GITHUB_WORKSPACE}/Initial_project.ioc\"" > generate_script.txt
+          echo "load STM32F407xx" > generate_script.txt
+          echo "project name Initial_project" >> generate_script.txt
           echo "project toolchain \"Makefile\"" >> generate_script.txt
-          echo "generate code \"${GITHUB_WORKSPACE}\"" >> generate_script.txt
+          echo "project path \"/__w/STM32-AWS/STM32-AWS\"" >> generate_script.txt
+          echo "config load \"/__w/STM32-AWS/STM32-AWS/Initial_project.iac\"" >> generate_script.txt
+          echo "project generate" >> generate_script.txt
           echo "exit" >> generate_script.txt
       - run: cat generate_script.txt
 
@@ -45,26 +48,43 @@ jobs:
       - name: Run STM32CubeMX
         timeout-minutes: 3
         run: |
-          SCRIPT_PATH="$(realpath "$GITHUB_WORKSPACE/generate_script.txt")"
+          SCRIPT_PATH="$(realpath "generate_script.txt")"
           echo "Using SCRIPT_PATH=$SCRIPT_PATH"
           echo "Using HOME=$HOME"
-          echo "Using GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
           echo "Using PWD=$PWD"
           xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
 
 
-      - name: Build firmware (Makefile)
-        continue-on-error: true
+      # Install ARM GCC + make
+      - name: Install ARM GCC toolchain
         run: |
-          ls -la
-          if [ ! -f Makefile ]; then
-            echo "No Makefile. Set Toolchain/IDE=Makefile in the .ioc and regenerate."
-            exit 1
-          fi
-          make -j"$(nproc)" all
-          make hex || true
-          make bin || true
-          make size || true
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            gcc-arm-none-eabi \
+            binutils-arm-none-eabi \
+            libnewlib-arm-none-eabi
+
+      # Build (CubeMX Makefile at repo root)
+      - name: Build firmware
+        working-directory: ${{ github.workspace }}
+        env:
+          MAKEFLAGS: -j$(nproc)
+        run: |
+          make all
+          arm-none-eabi-size build/*.elf || true
+
+      # (Optional) Upload build outputs
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware
+          path: |
+            build/**/*.elf
+            build/**/*.bin
+            build/**/*.hex
+            build/**/*.map
+
 
       - name: Setup tmate session for debugging
         if: env.DEBUG == 'true'
