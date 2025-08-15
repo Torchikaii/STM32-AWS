@@ -46,7 +46,7 @@ jobs:
       - run: echo $PWD
 
       - name: Run STM32CubeMX
-        timeout-minutes: 3
+        timeout-minutes: 5
         run: |
           SCRIPT_PATH="$(realpath "generate_script.txt")"
           echo "Using SCRIPT_PATH=$SCRIPT_PATH"
