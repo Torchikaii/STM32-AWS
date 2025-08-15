@@ -71,7 +71,7 @@ jobs:
 
       # Build (CubeMX Makefile at repo root)
       - name: Build firmware
-        working-directory: ${{ github.workspace }}
+        working-directory: /__w/STM32-AWS/STM32-AWS
         env:
           MAKEFLAGS: -j$(nproc)
         run: |
