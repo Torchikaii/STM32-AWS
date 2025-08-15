@@ -35,6 +35,7 @@ jobs:
         shell: bash
         run: |
           echo "config load \"${GITHUB_WORKSPACE}/Initial_project.ioc\"" > generate_script.txt
+          echo "project toolchain \"Makefile\"" >> generate_script.txt
           echo "generate code \"${GITHUB_WORKSPACE}\"" >> generate_script.txt
           echo "exit" >> generate_script.txt
       - run: cat generate_script.txt
