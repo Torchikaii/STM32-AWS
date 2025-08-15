@@ -29,7 +29,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Create generate_script.txt
         shell: bash
@@ -38,7 +38,9 @@ jobs:
           echo "generate code \"${GITHUB_WORKSPACE}\"" >> generate_script.txt
           echo "exit" >> generate_script.txt
       - run: cat generate_script.txt
+
       - run: echo $PWD
+
       - name: Run STM32CubeMX
         timeout-minutes: 3
         run: |
@@ -48,6 +50,20 @@ jobs:
           echo "Using GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
           echo "Using PWD=$PWD"
           xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
+
+
+      - name: Build firmware (Makefile)
+        continue-on-error: true
+        run: |
+          ls -la
+          if [ ! -f Makefile ]; then
+            echo "No Makefile. Set Toolchain/IDE=Makefile in the .ioc and regenerate."
+            exit 1
+          fi
+          make -j"$(nproc)" all
+          make hex || true
+          make bin || true
+          make size || true
 
       - name: Setup tmate session for debugging
         if: env.DEBUG == 'true'
