@@ -411,3 +411,4 @@ VP_USB_HOST_VS_USB_HOST_CDC_FS.Signal=USB_HOST_VS_USB_HOST_CDC_FS
 board=STM32F407G-DISC1
 boardIOC=true
 isbadioc=true
+Toolchain=Makefile
