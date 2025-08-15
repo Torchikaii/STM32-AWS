@@ -2,7 +2,17 @@ FROM ubuntu:latest
 
 # Install dependencies
 RUN apt-get update && \
-    apt-get install -y wget unzip openjdk-11-jre xvfb libgtk-3-0 gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi make && \
+    apt-get install -y  \
+        wget \
+        unzip \
+        openjdk-11-jre \
+        xvfb \
+        libgtk-3-0 \
+        build-essential \
+        gcc-arm-none-eabi  \
+        binutils-arm-none-eabi  \
+        libnewlib-arm-none-eabi  \
+        make && \
     rm -rf /var/lib/apt/lists/*
 
 # Download STM32CubeMX installer

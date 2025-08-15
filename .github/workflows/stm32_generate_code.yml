@@ -61,12 +61,13 @@ jobs:
       # Install ARM GCC + make
       - name: Install ARM GCC toolchain
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          apt-get update
+          apt-get install -y \
             build-essential \
             gcc-arm-none-eabi \
             binutils-arm-none-eabi \
-            libnewlib-arm-none-eabi
+            libnewlib-arm-none-eabi \
+            make
 
       # Build (CubeMX Makefile at repo root)
       - name: Build firmware
