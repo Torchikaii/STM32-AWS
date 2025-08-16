@@ -100,6 +100,7 @@ jobs:
 
       # 2) Show size and enforce flash/RAM budgets (STM32F407: ~1MB Flash, 192KB RAM)
       - name: Enforce size budgets
+        working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
         shell: bash
         run: |
           set -euo pipefail
