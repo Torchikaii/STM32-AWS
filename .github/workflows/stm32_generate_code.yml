@@ -53,7 +53,7 @@ jobs:
       - run: echo $PWD
 
       - name: Run STM32CubeMX
-        continue-on-error: true
+#        continue-on-error: true
         id: generate
         timeout-minutes: 5
         run: |
@@ -80,7 +80,7 @@ jobs:
         id: build
         if: steps.generate.outcome == 'success'
         working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
-        continue-on-error: true
+#        continue-on-error: true
         env:
           MAKEFLAGS: -j$(nproc)
         run: |
@@ -100,7 +100,15 @@ jobs:
             /__w/STM32-AWS/STM32-AWS/Initial_project/build/**/*.hex
             /__w/STM32-AWS/STM32-AWS/Initial_project/build/**/*.map
 
+      - name: Print workflow status
+        if: always() && env.DEBUG == 'true'
+        run: |
+          if [ "${{ job.status }}" = "failure" ]; then
+            echo "A previous step failed. Entering tmate debug session."
+          else
+            echo "Workflow succeeded. Entering tmate debug session."
+          fi
+
       - name: Setup tmate session for debugging
-        if: env.DEBUG == 'true'
-        # if: always()
+        if: always() && env.DEBUG == 'true'
         uses: mxschmitt/action-tmate@v3
