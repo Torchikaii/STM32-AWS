@@ -5,6 +5,10 @@ on:
     paths:
       - "Dockerfile"
       - ".github/workflows/build-image.yml"
+  pull_request:
+    branches:
+      - main  # Change this to your default branch if different
+
   workflow_dispatch:
 
 jobs:
