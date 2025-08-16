@@ -95,10 +95,10 @@ jobs:
           name: firmware
           retention-days: 3
           path: |
-            build/**/*.elf
-            build/**/*.bin
-            build/**/*.hex
-            build/**/*.map
+            /__w/STM32-AWS/STM32-AWS/Initial_project/build/**/*.elf
+            /__w/STM32-AWS/STM32-AWS/Initial_project/build/**/*.bin
+            /__w/STM32-AWS/STM32-AWS/Initial_project/build/**/*.hex
+            /__w/STM32-AWS/STM32-AWS/Initial_project/build/**/*.map
 
       - name: Setup tmate session for debugging
         if: env.DEBUG == 'true'
