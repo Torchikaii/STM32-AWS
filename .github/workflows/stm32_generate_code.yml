@@ -87,6 +87,43 @@ jobs:
           make
           arm-none-eabi-size build/*.elf || true
 
+      # 1) Verify artifacts exist
+      - name: Check build artifacts
+        working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
+        run: |
+          ls -la build || ls -la .
+          ELF=$(ls build/*.elf 2>/dev/null || ls *.elf)
+          BIN=$(ls build/*.bin 2>/dev/null || ls *.bin)
+          MAP=$(ls build/*.map 2>/dev/null || ls *.map)
+          echo "ELF=$ELF BIN=$BIN MAP=$MAP"
+          test -f "$ELF" && test -f "$BIN" && test -f "$MAP"
+
+      # 2) Show size and enforce flash/RAM budgets (STM32F407: ~1MB Flash, 192KB RAM)
+      - name: Enforce size budgets
+        working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
+        run: |
+          ELF=$(ls build/*.elf 2>/dev/null || ls *.elf)
+          arm-none-eabi-size "$ELF"
+          FLASH_BYTES=$((1024*1024))
+          RAM_BYTES=$((192*1024))
+          # Text+Data ~ flash usage; Data+Bss ~ RAM usage
+          read _ TEXT DATA BSS _ < <(arm-none-eabi-size "$ELF" | awk 'END{print $1,$2,$3,$4}')
+          FLASH_USED=$((TEXT+DATA))
+          RAM_USED=$((DATA+BSS))
+          echo "FLASH_USED=${FLASH_USED} RAM_USED=${RAM_USED}"
+          [ "$FLASH_USED" -le "$FLASH_BYTES" ] || { echo "Flash overflow"; exit 1; }
+          [ "$RAM_USED"   -le "$RAM_BYTES"   ] || { echo "RAM overflow"; exit 1; }
+
+      # 3) Basic ELF sanity: vector table & entry symbol present
+      - name: Check ELF sanity
+        working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
+        run: |
+          ELF=$(ls build/*.elf 2>/dev/null || ls *.elf)
+          # Ensure Reset_Handler exists
+          arm-none-eabi-nm "$ELF" | grep -q ' T Reset_Handler' || { echo "Missing Reset_Handler"; exit 1; }
+          # Dump first few vectors for debugging
+          arm-none-eabi-objdump -D -j .isr_vector "$ELF" | head -n 40
+
       # (Optional) Upload build outputs
       - name: Upload firmware artifacts
         if: steps.build.outcome == 'success'
