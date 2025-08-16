@@ -25,7 +25,8 @@ RUN wget https://stm32-cube-mx.s3.eu-central-1.amazonaws.com/stm32cubemx-lin-v6-
 # Unzip and install CubeMX
 RUN unzip stm32cubemx.zip && \
     chmod +x SetupSTM32CubeMX-* && \
-    ./SetupSTM32CubeMX-6.15.0 -c --option-file /tmp/cubemx-auto.xml
+    ./SetupSTM32CubeMX-6.15.0 -c --option-file /tmp/cubemx-auto.xml && \
+    rm -f stm32cubemx.zip SetupSTM32CubeMX-*
 
 # Add CubeMX to PATH (adjust version as needed)
 ENV PATH="/opt/STM32CubeMX:${PATH}"
