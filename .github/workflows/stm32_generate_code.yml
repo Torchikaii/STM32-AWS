@@ -79,7 +79,7 @@ jobs:
       - name: Build firmware
         id: build
         if: steps.generate.outcome == 'success'
-        working-directory: /__w/STM32-AWS/STM32-AWS
+        working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
         continue-on-error: true
         env:
           MAKEFLAGS: -j$(nproc)
