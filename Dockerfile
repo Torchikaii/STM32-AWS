@@ -15,15 +15,13 @@ RUN apt-get update && \
         make && \
     rm -rf /var/lib/apt/lists/*
 
-# Download STM32CubeMX installer
+# Download and install STM32CubeMX
 WORKDIR /opt
 
 COPY cubemx-auto.xml /tmp/cubemx-auto.xml
 
-RUN wget https://stm32-cube-mx.s3.eu-central-1.amazonaws.com/stm32cubemx-lin-v6-15-0.zip -O stm32cubemx.zip
-
-# Unzip and install CubeMX
-RUN unzip stm32cubemx.zip && \
+RUN wget https://stm32-cube-mx.s3.eu-central-1.amazonaws.com/stm32cubemx-lin-v6-15-0.zip -O stm32cubemx.zip && \
+    unzip stm32cubemx.zip && \
     chmod +x SetupSTM32CubeMX-* && \
     ./SetupSTM32CubeMX-6.15.0 -c --option-file /tmp/cubemx-auto.xml && \
     rm -f stm32cubemx.zip SetupSTM32CubeMX-*
