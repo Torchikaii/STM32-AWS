@@ -1,13 +1,13 @@
 name: Build Custom Image
 
 on:
-  push:
-    paths:
-      - "Dockerfile"
-      - ".github/workflows/build-image.yml"
-  pull_request:
-    branches:
-      - main  # Change this to your default branch if different
+#  push:
+#    paths:
+#      - "Dockerfile"
+#      - ".github/workflows/build-image.yml"
+#  pull_request:
+#    branches:
+#      - main  # Change this to your default branch if different
 
   workflow_dispatch:
 
@@ -29,7 +29,6 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v6
-
         with:
           context: .
           push: true
