@@ -42,6 +42,7 @@ jobs:
           echo "project toolchain \"Makefile\"" >> generate_script.txt
           echo "project path \"/__w/STM32-AWS/STM32-AWS\"" >> generate_script.txt
           echo "project name \"Initial_project\"" >> generate_script.txt
+          echo "project generateunderroot 1" >> generate_script.txt
           echo "project generate" >> generate_script.txt
           echo "exit" >> generate_script.txt
       - run: cat generate_script.txt
