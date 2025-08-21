@@ -41,7 +41,7 @@ echo "Using HOME=$HOME"
 echo "Using PWD=$PWD"
 timeout 300 docker run --rm -v "$(pwd):/workspace" -w /workspace \
   ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev \
-  xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "generate_script.txt" || echo "STM32CubeMX step failed or timed out, continuing..."
+  bash -c "ls -la /workspace && xvfb-run -a -s '-screen 0 1024x768x24' /opt/STM32CubeMX/STM32CubeMX -q 'generate_script.txt' && ls -la /workspace" || echo "STM32CubeMX step failed or timed out, continuing..."
 
 # Install ARM GCC toolchain (in container)
 echo "Installing ARM GCC toolchain..."
