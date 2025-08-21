@@ -2,5 +2,4 @@
 
 # Build Docker Image
 echo "Building Docker image..."
-docker build -t cubemx-runner .
-
+docker build -t ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev .
