@@ -39,9 +39,9 @@ SCRIPT_PATH="$(realpath "generate_script.txt")"
 echo "Using SCRIPT_PATH=$SCRIPT_PATH"
 echo "Using HOME=$HOME"
 echo "Using PWD=$PWD"
-docker run --rm -v "$(pwd):/workspace" -w /workspace \
+timeout 300 docker run --rm -v "$(pwd):/workspace" -w /workspace \
   ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev \
-  xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "generate_script.txt"
+  xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "generate_script.txt" || echo "STM32CubeMX step failed or timed out, continuing..."
 
 # Install ARM GCC toolchain (in container)
 echo "Installing ARM GCC toolchain..."
@@ -50,11 +50,16 @@ docker run --rm -v "$(pwd):/workspace" -w /workspace \
   bash -c "apt-get update && apt-get install -y build-essential gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi make"
 
 # Build firmware
-echo "Building firmware..."
-docker run --rm -v "$(pwd):/workspace" -w /workspace/Initial_project \
-  -e MAKEFLAGS="-j$(nproc)" \
-  ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev \
-  bash -c "make && arm-none-eabi-size build/*.elf || true"
+if [ -d "Initial_project" ] && [ -f "Initial_project/Makefile" ]; then
+  echo "Building firmware..."
+  docker run --rm -v "$(pwd):/workspace" -w /workspace/Initial_project \
+    -e MAKEFLAGS="-j$(nproc)" \
+    ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev \
+    bash -c "make && arm-none-eabi-size build/*.elf || true"
+else
+  echo "Code generation failed - Initial_project directory or Makefile not found"
+  exit 1
+fi
 
 # Verify artifacts exist
 echo "Checking build artifacts..."
