@@ -6,9 +6,9 @@ cat > generate_script.txt << EOF
 login "${ST_CUBE_EMAIL}" "${ST_CUBE_PASSWORD}" y
 swmgr refresh
 swmgr install stm32cube_f4_1.28.2 ask
-config load "$(pwd)/Initial_project.ioc"
+config load "/workspace/Initial_project.ioc"
 project toolchain "Makefile"
-project path "$(pwd)"
+project path "/workspace"
 project name "Initial_project"
 project generateunderroot 1
 project generate
