@@ -6,10 +6,9 @@ on:
   pull_request:
     branches: [main]
 
-# The token must have write permission on pull‑requests
 permissions:
   contents: read
-  pull-requests: write
+  pull-requests: write   # needed for the action to comment on PRs
 
 jobs:
   gitleaks:
@@ -20,7 +19,8 @@ jobs:
 
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
-        with:
-          # Pass the automatically created token
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: detect --source . --fail-on-secrets --redact
+        # No inputs are required; the action uses the built‑in token automatically.
+        # If you want to customise the scan, use the supported inputs (e.g., config, report_format, etc.).
+        # Example of a supported input:
+        #   with:
+        #     config: .gitleaks.toml
