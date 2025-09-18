@@ -2,15 +2,14 @@ name: Gitleaks Scan
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
+# The token must have write permission on pull‑requests
 permissions:
   contents: read
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   gitleaks:
@@ -18,7 +17,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         with:
+          # Pass the automatically created token
+          token: ${{ secrets.GITHUB_TOKEN }}
           args: detect --source . --fail-on-secrets --redact
