@@ -14,13 +14,9 @@ jobs:
   gitleaks:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        # No inputs are required; the action uses the built‑in token automatically.
-        # If you want to customise the scan, use the supported inputs (e.g., config, report_format, etc.).
-        # Example of a supported input:
-        #   with:
-        #     config: .gitleaks.toml
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
