@@ -8,9 +8,6 @@
 STM32-AWS is an experimental project aiming to connect STM32 microcontrollers to AWS IoT services.  
 The project is open to contributors and is currently in its foundational phase.
 
-## Getting Started
-
-See the [Step by step Guide](https://github.com/Torchikaii/STM32-AWS/issues/15) in the issue tracker for instructions on forking, cloning, and contributing.
 
 ## Contributing
 
