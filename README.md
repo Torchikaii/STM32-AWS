@@ -1,5 +1,28 @@
-### This file to be overwritten by actual README content
+# STM32-AWS
 
-Initial commit contains a full working project with `Blue LED` turning on when MCU starts and is **AI intact**.
-The markdown files and documentation are added in `/AI` folder ready to run AI agent prompt using context engineering.
+> ⚠️ **This project is in a very early stage of development.**  
+> Features and documentation are actively being developed—expect rapid changes!
 
+## About
+
+STM32-AWS is an experimental project aiming to connect STM32 microcontrollers to AWS IoT services.  
+The project is open to contributors and is currently in its foundational phase.
+
+
+## Contributing
+
+We welcome your help!  
+- Please check open issues and discussions.
+- Create a branch (e.g., `feat/12-update-readme`) for your work.
+- Open a pull request with a clear summary of your changes.
+
+## Roadmap
+
+- [ ] Initial connectivity to AWS IoT
+- [ ] Device registration and management
+- [ ] Secure communication
+
+---
+
+Thank you for your interest in STM32-AWS!  
+Feel free to open issues and suggest improvements.
