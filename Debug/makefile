@@ -56,6 +56,9 @@ default.size.stdout \
 OBJDUMP_LIST += \
 Initial_project.list \
 
+OBJCOPY_BIN += \
+Initial_project.bin \
+
 
 # All Target
 all: main-build
@@ -79,12 +82,17 @@ Initial_project.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+Initial_project.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "Initial_project.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) Initial_project.elf Initial_project.list Initial_project.map default.size.stdout
+	-$(RM) Initial_project.bin Initial_project.elf Initial_project.list Initial_project.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
