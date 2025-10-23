@@ -1,0 +1,1 @@
+Schematics file is in: PCB_Project -> Sheet1.SchDoc 
