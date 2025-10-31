@@ -1,1 +1,7 @@
-Record=TopLevelDocument|FileName=Sheet1.SchDoc|SheetNumber=1
+Record=TopLevelDocument|FileName=MCU_H7.SchDoc|SheetNumber=5
+Record=NoMainPathDocument|SourceDocument=MCU_H7.SchDoc|FileName=MCU_L4.SchDoc|SheetNumber=6
+Record=NoMainPathDocument|SourceDocument=MCU_H7.SchDoc|FileName=MCU_WL.SchDoc|SheetNumber=7
+Record=NoMainPathDocument|SourceDocument=MCU_H7.SchDoc|FileName=Peripherals.SchDoc|SheetNumber=4
+Record=NoMainPathDocument|SourceDocument=MCU_H7.SchDoc|FileName=Power_and_ST-link_zone.SchDoc|SheetNumber=2
+Record=NoMainPathDocument|SourceDocument=MCU_H7.SchDoc|FileName=Sheet1.SchDoc|SheetNumber=1
+Record=NoMainPathDocument|SourceDocument=MCU_H7.SchDoc|FileName=Signal_Switching.SchDoc|SheetNumber=3
