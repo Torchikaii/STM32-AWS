@@ -84,7 +84,7 @@ GenerateClassCluster=0
 DocumentUniqueId=XLPIVJAH
 
 [SearchPath1]
-Path=C:\Users\Vartotojas\OneDrive\Desktop\Altium semestro projektas\Komponentai\ERA6ARB512V\*.*
+Path=$(ProjectDir)\Komponentai\ERA6ARB512V\*.*
 IncludeSubFolders=1
 
 [OutputGroup1]

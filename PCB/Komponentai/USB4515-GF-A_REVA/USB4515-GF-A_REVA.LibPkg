@@ -84,7 +84,7 @@ GenerateClassCluster=0
 DocumentUniqueId=WMKRPOVU
 
 [SearchPath1]
-Path=C:\Users\Vartotojas\OneDrive\Desktop\Altium semestro projektas\Komponentai\USB4515-GF-A_REVA\*.*
+Path=$(ProjectDir)\Komponentai\USB4515-GF-A_REVA\*.*
 IncludeSubFolders=1
 
 [OutputGroup1]
