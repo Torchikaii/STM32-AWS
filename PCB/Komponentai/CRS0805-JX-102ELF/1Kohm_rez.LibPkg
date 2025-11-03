@@ -84,7 +84,7 @@ GenerateClassCluster=0
 DocumentUniqueId=MBLKAIDO
 
 [SearchPath1]
-Path=C:\Users\Vartotojas\OneDrive\Desktop\Altium semestro projektas\Komponentai\CRS0805-JX-102ELF\*.*
+Path=$(ProjectDir)\Komponentai\CRS0805-JX-102ELF\*.*
 IncludeSubFolders=1
 
 [OutputGroup1]

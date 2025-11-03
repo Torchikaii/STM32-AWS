@@ -84,7 +84,7 @@ GenerateClassCluster=0
 DocumentUniqueId=KZCQWEOV
 
 [SearchPath1]
-Path=C:\Users\Vartotojas\OneDrive\Desktop\Altium semestro projektas\Komponentai\CL21A106KAYNNNE\*.*
+Path=$(ProjectDir)\Komponentai\CL21A106KAYNNNE\*.*
 IncludeSubFolders=1
 
 [OutputGroup1]

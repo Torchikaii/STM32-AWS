@@ -84,7 +84,7 @@ GenerateClassCluster=0
 DocumentUniqueId=
 
 [SearchPath1]
-Path=C:\Users\Vartotojas\OneDrive\Desktop\Altium semestro projektas\Komponentai\HSMM-C170\*.*
+Path=$(ProjectDir)\Komponentai\HSMM-C170\*.*
 IncludeSubFolders=1
 
 [OutputGroup1]

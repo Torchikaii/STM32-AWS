@@ -84,7 +84,7 @@ GenerateClassCluster=0
 DocumentUniqueId=
 
 [SearchPath1]
-Path=C:\Users\Vartotojas\OneDrive\Desktop\Altium semestro projektas\Komponentai\AP2112K-3.3TRG1\*.*
+Path=$(ProjectDir)\Komponentai\AP2112K-3.3TRG1\*.*
 IncludeSubFolders=1
 
 [OutputGroup1]
