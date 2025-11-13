@@ -1,0 +1,117 @@
+Removed Pin From Net: NetName=NetC16_2 Pin=U9-12
+Removed Pin From Net: NetName=NetC16_2 Pin=U9-13
+Removed Pin From Net: NetName=NetC28_2 Pin=U10-5
+Removed Pin From Net: NetName=NetC29_1 Pin=U10-6
+Removed Member From Class: ClassName=Power_and_ST-link_zone Member=C70
+Removed Member From Class: ClassName=Power_and_ST-link_zone Member=C80
+Removed Member From Class: ClassName=Power_and_ST-link_zone Member=C90
+Removed Member From Class: ClassName=Power_and_ST-link_zone Member=C100
+Removed Member From Class: ClassName=Power_and_ST-link_zone Member=C110
+Removed Member From Class: ClassName=Power_and_ST-link_zone Member=R8
+Removed Member From Class: ClassName=MCU_WL Member=Y?
+Change Component Footprint: Designator=C46 Old Footprint=CAPC2013X145X50NL20T20 New Footprint=CAPC2013X140X50ML20T25
+Change Component Comment : Designator=C46 Old Comment=1uF New Comment=100nF
+Change Component Comment : Designator=L3 Old Comment=NRS6010T2R2MMGF New Comment=10uH
+Change Component Designator: OldDesignator=C45 NewDesignator=C49
+Change Component Designator: OldDesignator=C47 NewDesignator=C48
+Change Component Designator: OldDesignator=Y7 NewDesignator=Y8
+Change Component Designator: OldDesignator=Y? NewDesignator=Y7
+Change Managed Component Library Link : Designator=C46 Old VaultGUID=B7D15EC3-160A-466F-A46C-7801FE6295A7 New VaultGUID=B7D15EC3-160A-466F-A46C-7801FE6295A7 Old ItemGUID=6C1DE2D3-B723-43D4-A38B-5B030F531BF3 New ItemGUID=E0E34DBC-29AD-43EA-8AF0-F32393ED6E2A Old RevisionGUID=A8172E27-6FA5-45DE-AC08-194387A726E9 New RevisionGUID=AD3609CE-A470-4AA5-8A73-18BCF8E1FB95
+Change component parameters: Designator = "C46" ("C46"); Footprint = "CAPC2013X145X50NL20T20"; UniqueID = "\JZOBJXWH" ("\JZOBJXWH")
+Change component parameters (AddParameter): Name = "Manufacturer"; Value = "AVX Interconnect / Elco"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Part Number"; Value = "0805DD104KAT2A"; VariantName = "[No Variations]"
+Added Component: Designator=C45(CAPC2013X140X50ML20T25)
+Add component (AddParameter): Name = "Manufacturer"; Value = "AVX Interconnect / Elco"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Number"; Value = "0805DD104KAT2A"; VariantName = "[No Variations]"
+Added Component: Designator=C47(CAPC2013X140X50ML20T25)
+Add component (AddParameter): Name = "Manufacturer"; Value = "AVX Interconnect / Elco"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Number"; Value = "0805DD104KAT2A"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=ETH_RXD0 Pin=C37-2
+Added Pin To Net: NetName=ETH_RXD0 Pin=C38-2
+Added Pin To Net: NetName=+3.3V Pin=C39-2
+Added Pin To Net: NetName=+3.3V Pin=C40-2
+Added Pin To Net: NetName=+3.3V Pin=C41-2
+Added Pin To Net: NetName=+3.3V Pin=C42-2
+Added Pin To Net: NetName=+3.3V Pin=C43-2
+Added Pin To Net: NetName=+3.3V Pin=C44-2
+Added Pin To Net: NetName=ETH_RXD0 Pin=C45-1
+Added Pin To Net: NetName=+3.3V Pin=C45-2
+Added Pin To Net: NetName=ETH_RXD0 Pin=C46-1
+Added Pin To Net: NetName=+3.3V Pin=C46-2
+Added Pin To Net: NetName=ETH_RXD0 Pin=C47-1
+Added Pin To Net: NetName=+3.3V Pin=C47-2
+Added Pin To Net: NetName=ETH_RXD0 Pin=C48-2
+Added Pin To Net: NetName=ETH_RXD0 Pin=C49-2
+Added Pin To Net: NetName=ETH_RXD0 Pin=J3-2
+Added Pin To Net: NetName=ETH_RXD0 Pin=J3-3
+Added Pin To Net: NetName=ETH_RXD0 Pin=J3-4
+Added Pin To Net: NetName=ETH_RXD0 Pin=J3-5
+Added Pin To Net: NetName=NetC16_2 Pin=U9-8
+Added Pin To Net: NetName=NetC16_2 Pin=U9-9
+Added Pin To Net: NetName=NetC28_2 Pin=U10-3
+Added Pin To Net: NetName=NetC29_1 Pin=U10-4
+Added Pin To Net: NetName=ETH_RXD0 Pin=U11-A1
+Added Pin To Net: NetName=+3.3V Pin=U11-A2
+Added Pin To Net: NetName=SWCLK_3 Pin=U11-A4
+Added Pin To Net: NetName=+3.3V Pin=U11-A8
+Added Pin To Net: NetName=+3.3V Pin=U11-B5
+Added Pin To Net: NetName=ETH_RXD0 Pin=U11-B7
+Added Pin To Net: NetName=SWDIO_3 Pin=U11-B8
+Added Pin To Net: NetName=WIFI_TX_1 Pin=U11-C8
+Added Pin To Net: NetName=ETH_RXD0 Pin=U11-D9
+Added Pin To Net: NetName=ETH_RXD0 Pin=U11-E3
+Added Pin To Net: NetName=WIFI_RX_1 Pin=U11-E5
+Added Pin To Net: NetName=+3.3V Pin=U11-F6
+Added Pin To Net: NetName=+3.3V Pin=U11-F7
+Added Pin To Net: NetName=ETH_RXD0 Pin=U11-G5
+Added Pin To Net: NetName=ETH_RXD0 Pin=U11-G6
+Added Pin To Net: NetName=ETH_RXD0 Pin=U11-G7
+Added Pin To Net: NetName=ETH_RXD0 Pin=U11-G8
+Added Pin To Net: NetName=ETH_RXD0 Pin=U11-H6
+Added Pin To Net: NetName=ETH_RXD0 Pin=U11-H7
+Added Pin To Net: NetName=+3.3V Pin=U11-H9
+Added Pin To Net: NetName=ETH_RXD0 Pin=U11-J6
+Added Pin To Net: NetName=ETH_RXD0 Pin=U11-J8
+Added Pin To Net: NetName=+3.3V Pin=Y8-1
+Added Pin To Net: NetName=ETH_RXD0 Pin=Y8-2
+Added Pin To Net: NetName=+3.3V Pin=Y8-4
+Added Pin To Net: NetName=NetC37_1 Pin=C37-1
+Added Pin To Net: NetName=NetC37_1 Pin=J3-1
+Added Pin To Net: NetName=NetC37_1 Pin=L2-2
+Added Net: Name=NetC37_1
+Added Pin To Net: NetName=NetC38_1 Pin=C38-1
+Added Pin To Net: NetName=NetC38_1 Pin=L2-1
+Added Pin To Net: NetName=NetC38_1 Pin=U11-J9
+Added Net: Name=NetC38_1
+Added Pin To Net: NetName=NetC48_1 Pin=C48-1
+Added Pin To Net: NetName=NetC48_1 Pin=C49-1
+Added Pin To Net: NetName=NetC48_1 Pin=L3-2
+Added Pin To Net: NetName=NetC48_1 Pin=U11-B2
+Added Net: Name=NetC48_1
+Added Pin To Net: NetName=NetL3_1 Pin=L3-1
+Added Pin To Net: NetName=NetL3_1 Pin=U11-B1
+Added Net: Name=NetL3_1
+Added Pin To Net: NetName=NetU9_12 Pin=U9-12
+Added Pin To Net: NetName=NetU9_12 Pin=Y3-3
+Added Net: Name=NetU9_12
+Added Pin To Net: NetName=NetU9_13 Pin=U9-13
+Added Pin To Net: NetName=NetU9_13 Pin=Y3-1
+Added Net: Name=NetU9_13
+Added Pin To Net: NetName=NetU10_5 Pin=U10-5
+Added Pin To Net: NetName=NetU10_5 Pin=Y5-3
+Added Net: Name=NetU10_5
+Added Pin To Net: NetName=NetU10_6 Pin=U10-6
+Added Pin To Net: NetName=NetU10_6 Pin=Y5-1
+Added Net: Name=NetU10_6
+Added Pin To Net: NetName=NetU11_G9 Pin=U11-G9
+Added Pin To Net: NetName=NetU11_G9 Pin=Y8-3
+Added Net: Name=NetU11_G9
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C7 100nF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C8 100nF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C9 100nF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C10 100nF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C11 1uF
+Added Member To Class: ClassName=MCU_WL Member=Component C48 10uF
+Added Member To Class: ClassName=MCU_WL Member=Component C49 1uF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component R11 CRGCQ0805F1K0
+Added Member To Class: ClassName=MCU_WL Member=Component Y8 SIT5008BI-1F-18E-32.000000E
