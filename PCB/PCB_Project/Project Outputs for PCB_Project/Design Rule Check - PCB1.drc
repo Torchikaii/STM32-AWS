@@ -1,7 +1,7 @@
 Protel Design System Design Rule Check
 PCB File : D:\temp\CubeIDE\Projects\Initial_project\PCB\PCB_Project\PCB1.PcbDoc
 Date     : 11/16/2025
-Time     : 7:50:32 PM
+Time     : 7:57:32 PM
 
 ERROR : More than 500 violations detected, DRC was stopped
 
@@ -550,4 +550,4 @@ Rule Violations :0
 
 Violations Detected : 500
 Waived Violations : 0
-Time Elapsed        : 00:00:02
+Time Elapsed        : 00:00:01
