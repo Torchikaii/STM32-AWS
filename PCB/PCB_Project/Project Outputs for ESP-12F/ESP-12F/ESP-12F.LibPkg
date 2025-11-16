@@ -84,7 +84,7 @@ GenerateClassCluster=0
 DocumentUniqueId=
 
 [SearchPath1]
-Path=D:\temp\CubeIDE\Projects\Initial_project\PCB\PCB_Project\Project Outputs for ESP-12F\ESP-12F\*.*
+Path=*.*
 IncludeSubFolders=1
 
 [OutputGroup1]
