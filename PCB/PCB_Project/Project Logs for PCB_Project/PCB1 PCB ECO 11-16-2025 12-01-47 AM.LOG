@@ -1,0 +1,69 @@
+Removed Member From Class: ClassName=Power_and_ST-link_zone Member=C15
+Removed Member From Class: ClassName=Peripherals Member=C25
+Removed Member From Class: ClassName=Peripherals Member=C27
+Removed Member From Class: ClassName=MCU_H7 Member=C35
+Removed Member From Class: ClassName=Peripherals Member=C35
+Removed Member From Class: ClassName=MCU_H7 Member=C36
+Removed Member From Class: ClassName=MCU_H7 Member=C38
+Removed Member From Class: ClassName=MCU_H7 Member=C39
+Removed Member From Class: ClassName=MCU_H7 Member=C41
+Removed Member From Class: ClassName=MCU_H7 Member=C42
+Removed Member From Class: ClassName=Power_and_ST-link_zone Member=J8
+Removed Member From Class: ClassName=Power_and_ST-link_zone Member=R9
+Removed Member From Class: ClassName=Peripherals Member=R10
+Removed Member From Class: ClassName=MCU_H7 Member=R13
+Removed Member From Class: ClassName=MCU_H7 Member=R25
+Removed Member From Class: ClassName=MCU_H7 Member=U11
+Added Component: Designator=U8(ESP-12F)
+Add component (AddParameter): Name = "Check_prices"; Value = "https://www.snapeda.com/parts/ESP-12F/AI-Thinker/view-part/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "AI-Thinker"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "ESP-12F"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "Package"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SnapEDA_Link"; Value = "https://www.snapeda.com/parts/ESP-12F/AI-Thinker/view-part/?ref=snap"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Pin To Net: NetName=NetR11_1 Pin=U8-1
+Added Pin To Net: NetName=NetR12_1 Pin=U8-3
+Added Pin To Net: NetName=+3.3V Pin=U8-8
+Added Pin To Net: NetName=ETH_RXD0 Pin=U8-15
+Added Pin To Net: NetName=NetR17_2 Pin=U8-16
+Added Pin To Net: NetName=NetP4_2 Pin=U8-17
+Added Pin To Net: NetName=NetR15_2 Pin=U8-18
+Added Pin To Net: NetName=WIFI_TX Pin=U8-21
+Added Pin To Net: NetName=WIFI_RX Pin=U8-22
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C1 100nF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C2 10uF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C4 22uF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C8 100nF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C9 100nF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C10 22pF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C11 22pF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component C12 100nF
+Added Member To Class: ClassName=Peripherals Member=Component C13 100uF
+Added Member To Class: ClassName=Peripherals Member=Component C16 100uF
+Added Member To Class: ClassName=Peripherals Member=Component C18 22pF
+Added Member To Class: ClassName=Peripherals Member=Component C20 100nF
+Added Member To Class: ClassName=MCU_H7 Member=Component C22 100nF
+Added Member To Class: ClassName=MCU_H7 Member=Component C23 2.2uF
+Added Member To Class: ClassName=MCU_H7 Member=Component C24 100nF
+Added Member To Class: ClassName=MCU_H7 Member=Component C26 100nF
+Added Member To Class: ClassName=MCU_H7 Member=Component C28 22pF
+Added Member To Class: ClassName=MCU_H7 Member=Component C29 1uF
+Added Member To Class: ClassName=MCU_H7 Member=Component C31 100nF
+Added Member To Class: ClassName=MCU_H7 Member=Component C32 6.8pF
+Added Member To Class: ClassName=MCU_H7 Member=Component C33 6.8pF
+Added Member To Class: ClassName=MCU_L4 Member=Component C34 100nF
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component J1 PBC01SAAN
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component J2 473460001
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component R4 10KO
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component R6 33R
+Added Member To Class: ClassName=Power_and_ST-link_zone Member=Component R8 1.5k
+Added Member To Class: ClassName=Peripherals Member=Component R12 10k
+Added Member To Class: ClassName=Peripherals Member=Component R17 10k
+Added Member To Class: ClassName=Peripherals Member=Component R18 10k
+Added Member To Class: ClassName=MCU_H7 Member=Component R22 1KO
+Added Member To Class: ClassName=MCU_H7 Member=Component R23 1KO
+Added Member To Class: ClassName=MCU_H7 Member=Component R24 10KO
+Added Member To Class: ClassName=Signal_Switching Member=Component U3 CD74HC4052PWR
+Added Member To Class: ClassName=Peripherals Member=Component U8 ESP-12F
+Added Member To Class: ClassName=MCU_H7 Member=Component U10 HTS221TR
+Added Member To Class: ClassName=MCU_H7 Member=Component Y4 ABS07-LR-32.768KHZ-6-T

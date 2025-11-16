@@ -1,0 +1,17 @@
+Added Component: Designator=U8(ESP-12F)
+Add component (AddParameter): Name = "Check_prices"; Value = "https://www.snapeda.com/parts/ESP-12F/AI-Thinker/view-part/?ref=eda"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MF"; Value = "AI-Thinker"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "MP"; Value = "ESP-12F"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package"; Value = "Package"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SnapEDA_Link"; Value = "https://www.snapeda.com/parts/ESP-12F/AI-Thinker/view-part/?ref=snap"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = ""; VariantName = "[No Variations]"
+Added Pin To Net: NetName=NetR11_1 Pin=U8-1
+Added Pin To Net: NetName=NetR12_1 Pin=U8-3
+Added Pin To Net: NetName=+3.3V Pin=U8-8
+Added Pin To Net: NetName=ETH_RXD0 Pin=U8-15
+Added Pin To Net: NetName=NetR17_2 Pin=U8-16
+Added Pin To Net: NetName=NetP4_2 Pin=U8-17
+Added Pin To Net: NetName=NetR15_2 Pin=U8-18
+Added Pin To Net: NetName=WIFI_TX Pin=U8-21
+Added Pin To Net: NetName=WIFI_RX Pin=U8-22
+Added Member To Class: ClassName=Peripherals Member=Component U8
