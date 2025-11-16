@@ -1,0 +1,12 @@
+Removed Pin From Net: NetName=ETH_RXD0 Pin=U9-32
+Removed Pin From Net: NetName=ETH_RXD0 Pin=U9-33
+Change Net Name : Old Net Name=ETH_RXD0 New Net Name=GND
+Added Pin To Net: NetName=ETH_RXD0 Pin=R14-2
+Added Pin To Net: NetName=ETH_RXD0 Pin=U7-8
+Added Pin To Net: NetName=ETH_RXD0 Pin=U9-32
+Added Net: Name=ETH_RXD0
+Added Pin To Net: NetName=ETH_RXD1 Pin=R18-2
+Added Pin To Net: NetName=ETH_RXD1 Pin=U7-7
+Added Pin To Net: NetName=ETH_RXD1 Pin=U9-33
+Added Net: Name=ETH_RXD1
+Added Rule: Name=Schematic Supply Nets_1
