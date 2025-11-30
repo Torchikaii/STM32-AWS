@@ -66,7 +66,7 @@ jobs:
           echo "Using PWD=$PWD"
           xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
 
-
+      # Install ARM GCC + make
       # Install ARM GCC
       - name: Install ARM GCC toolchain
         run: |
@@ -78,6 +78,7 @@ jobs:
             libnewlib-arm-none-eabi \
             make
 
+      # Build (CubeMX Makefile at repo root)
       # Compile Firmware & Generate ELF/BIN/HEX & Size Analysis
       - name: Build firmware
         id: build
@@ -90,6 +91,7 @@ jobs:
           make
           arm-none-eabi-size build/*.elf || true
 
+      # 1) Verify artifacts exist
       # Check Artifacts Exist
       - name: Check build artifacts
         working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
@@ -101,6 +103,7 @@ jobs:
           echo "ELF=$ELF BIN=$BIN MAP=$MAP"
           test -f "$ELF" && test -f "$BIN" && test -f "$MAP"
 
+      # 2) Show size and enforce flash/RAM budgets (STM32F407: ~1MB Flash, 192KB RAM)
       # Enforce Size Budgets
       - name: Enforce size budgets
         working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
@@ -117,6 +120,7 @@ jobs:
           [ "$FLASH_USED" -le $((1024*1024)) ] || { echo "Flash overflow"; exit 1; }
           [ "$RAM_USED"   -le $((192*1024))   ] || { echo "RAM overflow"; exit 1; }
 
+      # 3) Basic ELF sanity: vector table & entry symbol present
       # ELF Sanity Checks & Vector Table Validation
       - name: Check ELF sanity
         working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
@@ -127,7 +131,8 @@ jobs:
           # Dump first few vectors for debugging
           arm-none-eabi-objdump -D -j .isr_vector "$ELF" | head -n 40
 
-      # Upload Artifacts (3 Month Retention)
+      # (Optional) Upload build outputs
+      # Upload firmware artifacts (3 Month Retention)
       - name: Upload firmware artifacts
         if: steps.build.outcome == 'success'
         uses: actions/upload-artifact@v4
