@@ -66,26 +66,26 @@ flowchart TD
 
 ### Workflow explanation
 
-###### 1. `build-image.yml`
+#### 1. `build-image.yml`
 Builds Docker container with STM32CubeMX and toolchain.
 
 - **Triggers**: Manual dispatch
 - **Output**: `ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest`
 
-###### 2. `stm32_generate_code.yml`
+#### 2. `stm32_generate_code.yml`
 Main CI/CD pipeline for firmware generation and build.
 
 - **Triggers**: Push to main, PR to main, manual dispatch
 - **Container**: Custom Docker image with STM32CubeMX (`:dev` tag)
 - **Outputs**: Firmware binaries (.elf, .bin, .hex, .map)
 
-###### 3. `gitleaks.yml`
+#### 3. `gitleaks.yml`
 Scans for leaked secrets and credentials.
 
 - **Triggers**: Push to main, PR to main
 - **Action**: Comments on PRs if secrets detected
 
-In theory CI/CD should work without the .ioc file, it would just grab the existing C code, however you should think of it like:
+In theory CI/CD should work without the .ioc file and just grab the existing C code. However, you should think of it like:
 
 - `.ioc` = architectural blueprint
 - Generated C files = constructed building

@@ -50,7 +50,6 @@ jobs:
           echo "project generateunderroot 1" >> generate_script.txt
           echo "project generate" >> generate_script.txt
           echo "exit" >> generate_script.txt
-      - run: cat generate_script.txt
 
       - run: echo $PWD
 
