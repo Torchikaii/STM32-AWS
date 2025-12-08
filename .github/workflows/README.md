@@ -4,7 +4,7 @@ This directory contains GitHub Actions workflows for automated STM32 firmware de
 
 ### Workflow Overview
 
-flowchart below describes CI/CD proccess for both `build-image.yml` and `stm32_generate_code.yml` workflows 
+flowchart below describes CI/CD process for both `build-image.yml` and `stm32_generate_code.yml` workflows 
 
 ```mermaid
 flowchart TD
@@ -26,7 +26,7 @@ flowchart TD
     end
     
     subgraph BUILD["Build Stage"]
-        K[Install ARM GCC] --> L[Compile Firmware]
+        K[Install ARM GCC Toolchain] --> L[Compile Firmware]
         L --> M[Generate ELF/BIN/HEX]
         M --> N[Size Analysis]
     end
@@ -37,11 +37,11 @@ flowchart TD
         Q --> R[Vector Table Validation]
     end
     
-    subgraph CONTAINER["Docker Container"]
+    subgraph CONTAINER["Docker Image Contents"]
         S[Ubuntu Base Image]
         T[STM32CubeMX 6.15.0]
-        U[ARM GCC Toolchain]
-        V[Build Tools & Dependencies]
+        U[xvfb + Java 11]
+        V[Build Tools]
     end
     
     subgraph ARTIFACTS["Build Artifacts"]
@@ -59,10 +59,10 @@ flowchart TD
     DOCKER --> CONTAINER
     CONTAINER -.-> GENERATION
     
-    R --> AA[Upload build outputs<br/>3 Month Retention]
+    R --> AA[Upload build outputs<br/>3 Day Retention]
 ```
 
-
+**Note**: The "Code Generation Stage" shows CubeMX's internal operations as separate steps for clarity. In the actual workflow, steps G→H→I→J execute together when STM32CubeMX runs the script.
 
 ### Workflow explanation
 
@@ -76,8 +76,14 @@ Builds Docker container with STM32CubeMX and toolchain.
 Main CI/CD pipeline for firmware generation and build.
 
 - **Triggers**: Push to main, PR to main, manual dispatch
-- **Container**: Custom Docker image with STM32CubeMX
+- **Container**: Custom Docker image with STM32CubeMX (`:dev` tag)
 - **Outputs**: Firmware binaries (.elf, .bin, .hex, .map)
+
+###### 3. `gitleaks.yml`
+Scans for leaked secrets and credentials.
+
+- **Triggers**: Push to main, PR to main
+- **Action**: Comments on PRs if secrets detected
 
 In theory CI/CD should work without the .ioc file, it would just grab the existing C code, however you should think of it like:
 
@@ -88,15 +94,19 @@ In theory CI/CD should work without the .ioc file, it would just grab the existi
 ## Caching & Performance
 
 First builds are slow due to:
-- Docker layer downloads
-- STM32Cube firmware package download (~hundreds of MB)
+- Docker image pull from GHCR
+- STM32Cube F4 firmware package download (~hundreds of MB, happens every run)
+- ARM GCC toolchain installation
 
 Subsequent builds are faster through:
-- Docker layer caching
+- Docker layer caching (image pull)
+- Faster package downloads on GitHub infrastructure
+
+**Note**: F4 firmware package downloads inside the ephemeral container each run and is not persisted between workflow executions.
 
 
 ## Security
 
 - ST account credentials stored as GitHub secrets
 - Container registry authentication via GitHub tokens
-- No hardoced credentials in workflows (gitleaks enabled)
+- No hardcoded credentials in workflows (gitleaks enabled)
