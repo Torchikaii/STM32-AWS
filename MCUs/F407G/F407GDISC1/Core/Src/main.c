@@ -155,6 +155,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    HAL_GPIO_TogglePin(LD6_GPIO_Port, LD6_Pin); // Toggle blue LED
+    HAL_Delay(1000); // 1 second delay
   }
   /* USER CODE END 3 */
 }
