@@ -1,0 +1,5 @@
+SCRIPT_PATH="$(realpath "generate_script.txt")"
+echo "Using SCRIPT_PATH=$SCRIPT_PATH"
+echo "Using HOME=$HOME"
+echo "Using PWD=$PWD"
+~/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
