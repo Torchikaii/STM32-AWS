@@ -114,9 +114,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14); // Toggle LED
+    //HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14); // Toggle LED
     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7); // Toggle LED
-    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle LED
+    //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle LED
 
     HAL_Delay(1000); // Delay for 500ms
   }

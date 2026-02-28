@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cc6F1zNN.s 			page 1
+ARM GAS  /tmp/cc3dulPZ.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
   29:Core/Src/main.c **** /* USER CODE BEGIN PTD */
   30:Core/Src/main.c **** 
   31:Core/Src/main.c **** /* USER CODE END PTD */
-ARM GAS  /tmp/cc6F1zNN.s 			page 2
+ARM GAS  /tmp/cc3dulPZ.s 			page 2
 
 
   32:Core/Src/main.c **** 
@@ -118,7 +118,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
   86:Core/Src/main.c **** 
   87:Core/Src/main.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   88:Core/Src/main.c ****   HAL_Init();
-ARM GAS  /tmp/cc6F1zNN.s 			page 3
+ARM GAS  /tmp/cc3dulPZ.s 			page 3
 
 
   89:Core/Src/main.c **** 
@@ -149,9 +149,9 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  114:Core/Src/main.c ****     /* USER CODE END WHILE */
  115:Core/Src/main.c **** 
  116:Core/Src/main.c ****     /* USER CODE BEGIN 3 */
- 117:Core/Src/main.c ****     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14); // Toggle LED
+ 117:Core/Src/main.c ****     //HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14); // Toggle LED
  118:Core/Src/main.c ****     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7); // Toggle LED
- 119:Core/Src/main.c ****     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle LED
+ 119:Core/Src/main.c ****     //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle LED
  120:Core/Src/main.c **** 
  121:Core/Src/main.c ****     HAL_Delay(1000); // Delay for 500ms
  122:Core/Src/main.c ****   }
@@ -178,7 +178,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  143:Core/Src/main.c ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
  144:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
  145:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-ARM GAS  /tmp/cc6F1zNN.s 			page 4
+ARM GAS  /tmp/cc3dulPZ.s 			page 4
 
 
  146:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
@@ -238,7 +238,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  200:Core/Src/main.c **** 
  201:Core/Src/main.c ****   /* USER CODE BEGIN MACADDRESS */
  202:Core/Src/main.c **** 
-ARM GAS  /tmp/cc6F1zNN.s 			page 5
+ARM GAS  /tmp/cc3dulPZ.s 			page 5
 
 
  203:Core/Src/main.c ****   /* USER CODE END MACADDRESS */
@@ -298,7 +298,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  257:Core/Src/main.c ****   */
  258:Core/Src/main.c **** static void MX_USB_OTG_FS_PCD_Init(void)
  259:Core/Src/main.c **** {
-ARM GAS  /tmp/cc6F1zNN.s 			page 6
+ARM GAS  /tmp/cc3dulPZ.s 			page 6
 
 
  260:Core/Src/main.c **** 
@@ -358,7 +358,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
   46 0006 0794     		str	r4, [sp, #28]
   47 0008 0894     		str	r4, [sp, #32]
   48 000a 0994     		str	r4, [sp, #36]
-ARM GAS  /tmp/cc6F1zNN.s 			page 7
+ARM GAS  /tmp/cc3dulPZ.s 			page 7
 
 
   49 000c 0A94     		str	r4, [sp, #40]
@@ -418,7 +418,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
   95 004a 0392     		str	r2, [sp, #12]
   96              		.loc 1 303 3 view .LVU19
   97 004c 039A     		ldr	r2, [sp, #12]
-ARM GAS  /tmp/cc6F1zNN.s 			page 8
+ARM GAS  /tmp/cc3dulPZ.s 			page 8
 
 
   98              	.LBE6:
@@ -478,7 +478,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  308:Core/Src/main.c ****   /*Configure GPIO pin Output Level */
  309:Core/Src/main.c ****   HAL_GPIO_WritePin(GPIOB, LD1_Pin|LD3_Pin|LD2_Pin, GPIO_PIN_RESET);
  148              		.loc 1 309 3 view .LVU39
-ARM GAS  /tmp/cc6F1zNN.s 			page 9
+ARM GAS  /tmp/cc3dulPZ.s 			page 9
 
 
  149 008a 1C4F     		ldr	r7, .L3+4
@@ -538,7 +538,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  324:Core/Src/main.c ****   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
  189              		.loc 1 324 3 is_stmt 1 view .LVU54
  190              		.loc 1 324 25 is_stmt 0 view .LVU55
-ARM GAS  /tmp/cc6F1zNN.s 			page 10
+ARM GAS  /tmp/cc3dulPZ.s 			page 10
 
 
  191 00c6 0A94     		str	r4, [sp, #40]
@@ -598,7 +598,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  340:Core/Src/main.c ****   /* USER CODE BEGIN MX_GPIO_Init_2 */
  341:Core/Src/main.c **** 
  342:Core/Src/main.c ****   /* USER CODE END MX_GPIO_Init_2 */
-ARM GAS  /tmp/cc6F1zNN.s 			page 11
+ARM GAS  /tmp/cc3dulPZ.s 			page 11
 
 
  343:Core/Src/main.c **** }
@@ -658,7 +658,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
    7:Drivers/CMSIS/Include/cmsis_gcc.h **** /*
    8:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2021 Arm Limited. All rights reserved.
    9:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
-ARM GAS  /tmp/cc6F1zNN.s 			page 12
+ARM GAS  /tmp/cc3dulPZ.s 			page 12
 
 
   10:Drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
@@ -718,7 +718,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
   64:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
   65:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
   66:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
-ARM GAS  /tmp/cc6F1zNN.s 			page 13
+ARM GAS  /tmp/cc3dulPZ.s 			page 13
 
 
   67:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
@@ -778,7 +778,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  121:Drivers/CMSIS/Include/cmsis_gcc.h **** 
  122:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __PROGRAM_START
  123:Drivers/CMSIS/Include/cmsis_gcc.h **** 
-ARM GAS  /tmp/cc6F1zNN.s 			page 14
+ARM GAS  /tmp/cc3dulPZ.s 			page 14
 
 
  124:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
@@ -838,7 +838,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  178:Drivers/CMSIS/Include/cmsis_gcc.h **** #define __VECTOR_TABLE            __Vectors
  179:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
  180:Drivers/CMSIS/Include/cmsis_gcc.h **** 
-ARM GAS  /tmp/cc6F1zNN.s 			page 15
+ARM GAS  /tmp/cc3dulPZ.s 			page 15
 
 
  181:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __VECTOR_TABLE_ATTRIBUTE
@@ -898,7 +898,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  235:Drivers/CMSIS/Include/cmsis_gcc.h **** 
  236:Drivers/CMSIS/Include/cmsis_gcc.h **** 
  237:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
-ARM GAS  /tmp/cc6F1zNN.s 			page 16
+ARM GAS  /tmp/cc3dulPZ.s 			page 16
 
 
  238:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Wait For Event
@@ -958,7 +958,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  292:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __REV(uint32_t value)
  293:Drivers/CMSIS/Include/cmsis_gcc.h **** {
  294:Drivers/CMSIS/Include/cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)
-ARM GAS  /tmp/cc6F1zNN.s 			page 17
+ARM GAS  /tmp/cc3dulPZ.s 			page 17
 
 
  295:Drivers/CMSIS/Include/cmsis_gcc.h ****   return __builtin_bswap32(value);
@@ -1018,7 +1018,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  349:Drivers/CMSIS/Include/cmsis_gcc.h ****   if (op2 == 0U)
  350:Drivers/CMSIS/Include/cmsis_gcc.h ****   {
  351:Drivers/CMSIS/Include/cmsis_gcc.h ****     return op1;
-ARM GAS  /tmp/cc6F1zNN.s 			page 18
+ARM GAS  /tmp/cc3dulPZ.s 			page 18
 
 
  352:Drivers/CMSIS/Include/cmsis_gcc.h ****   }
@@ -1078,7 +1078,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  406:Drivers/CMSIS/Include/cmsis_gcc.h ****      __builtin_clz(0) is undefined behaviour, so handle this case specially.
  407:Drivers/CMSIS/Include/cmsis_gcc.h ****      This guarantees ARM-compatible results if happening to compile on a non-ARM
  408:Drivers/CMSIS/Include/cmsis_gcc.h ****      target, and ensures the compiler doesn't decide to activate any
-ARM GAS  /tmp/cc6F1zNN.s 			page 19
+ARM GAS  /tmp/cc3dulPZ.s 			page 19
 
 
  409:Drivers/CMSIS/Include/cmsis_gcc.h ****      optimisations using the logic "value was passed to __builtin_clz, so it
@@ -1138,7 +1138,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  463:Drivers/CMSIS/Include/cmsis_gcc.h ****     */
  464:Drivers/CMSIS/Include/cmsis_gcc.h ****    __ASM volatile ("ldrexh %0, [%1]" : "=r" (result) : "r" (addr) : "memory" );
  465:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
-ARM GAS  /tmp/cc6F1zNN.s 			page 20
+ARM GAS  /tmp/cc3dulPZ.s 			page 20
 
 
  466:Drivers/CMSIS/Include/cmsis_gcc.h ****    return ((uint16_t) result);    /* Add explicit type cast here */
@@ -1198,7 +1198,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  520:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   STR Exclusive (32 bit)
  521:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Executes a exclusive STR instruction for 32 bit values.
  522:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]  value  Value to store
-ARM GAS  /tmp/cc6F1zNN.s 			page 21
+ARM GAS  /tmp/cc3dulPZ.s 			page 21
 
 
  523:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
@@ -1258,7 +1258,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  577:Drivers/CMSIS/Include/cmsis_gcc.h **** #define __USAT(ARG1, ARG2) \
  578:Drivers/CMSIS/Include/cmsis_gcc.h **** __extension__ \
  579:Drivers/CMSIS/Include/cmsis_gcc.h **** ({                          \
-ARM GAS  /tmp/cc6F1zNN.s 			page 22
+ARM GAS  /tmp/cc3dulPZ.s 			page 22
 
 
  580:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t __RES, __ARG1 = (ARG1); \
@@ -1318,7 +1318,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  634:Drivers/CMSIS/Include/cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
  635:Drivers/CMSIS/Include/cmsis_gcc.h ****    __ASM volatile ("ldrht %0, %1" : "=r" (result) : "Q" (*ptr) );
  636:Drivers/CMSIS/Include/cmsis_gcc.h **** #else
-ARM GAS  /tmp/cc6F1zNN.s 			page 23
+ARM GAS  /tmp/cc3dulPZ.s 			page 23
 
 
  637:Drivers/CMSIS/Include/cmsis_gcc.h ****     /* Prior to GCC 4.8, "Q" will be expanded to [rx, #0] which is not
@@ -1378,7 +1378,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  691:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __STRT(uint32_t value, volatile uint32_t *ptr)
  692:Drivers/CMSIS/Include/cmsis_gcc.h **** {
  693:Drivers/CMSIS/Include/cmsis_gcc.h ****    __ASM volatile ("strt %1, %0" : "=Q" (*ptr) : "r" (value) );
-ARM GAS  /tmp/cc6F1zNN.s 			page 24
+ARM GAS  /tmp/cc3dulPZ.s 			page 24
 
 
  694:Drivers/CMSIS/Include/cmsis_gcc.h **** }
@@ -1438,7 +1438,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  748:Drivers/CMSIS/Include/cmsis_gcc.h **** 
  749:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif /* ((defined (__ARM_ARCH_7M__      ) && (__ARM_ARCH_7M__      == 1)) || \
  750:Drivers/CMSIS/Include/cmsis_gcc.h ****            (defined (__ARM_ARCH_7EM__     ) && (__ARM_ARCH_7EM__     == 1)) || \
-ARM GAS  /tmp/cc6F1zNN.s 			page 25
+ARM GAS  /tmp/cc3dulPZ.s 			page 25
 
 
  751:Drivers/CMSIS/Include/cmsis_gcc.h ****            (defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1))    ) */
@@ -1498,7 +1498,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  805:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
  806:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
  807:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __STLB(uint8_t value, volatile uint8_t *ptr)
-ARM GAS  /tmp/cc6F1zNN.s 			page 26
+ARM GAS  /tmp/cc3dulPZ.s 			page 26
 
 
  808:Drivers/CMSIS/Include/cmsis_gcc.h **** {
@@ -1558,7 +1558,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  862:Drivers/CMSIS/Include/cmsis_gcc.h ****    __ASM volatile ("ldaexh %0, %1" : "=r" (result) : "Q" (*ptr) : "memory" );
  863:Drivers/CMSIS/Include/cmsis_gcc.h ****    return ((uint16_t) result);
  864:Drivers/CMSIS/Include/cmsis_gcc.h **** }
-ARM GAS  /tmp/cc6F1zNN.s 			page 27
+ARM GAS  /tmp/cc3dulPZ.s 			page 27
 
 
  865:Drivers/CMSIS/Include/cmsis_gcc.h **** 
@@ -1618,7 +1618,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  919:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]  value  Value to store
  920:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
  921:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return          0  Function succeeded
-ARM GAS  /tmp/cc6F1zNN.s 			page 28
+ARM GAS  /tmp/cc3dulPZ.s 			page 28
 
 
  922:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return          1  Function failed
@@ -1678,7 +1678,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  277              		.loc 1 358 3 view .LVU78
  359:Core/Src/main.c ****   {
  360:Core/Src/main.c ****   }
-ARM GAS  /tmp/cc6F1zNN.s 			page 29
+ARM GAS  /tmp/cc3dulPZ.s 			page 29
 
 
  278              		.loc 1 360 3 view .LVU79
@@ -1738,7 +1738,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  321              		.loc 1 192 14 is_stmt 0 view .LVU92
  322 0016 DA70     		strb	r2, [r3, #3]
  193:Core/Src/main.c ****   MACAddr[5] = 0x00;
-ARM GAS  /tmp/cc6F1zNN.s 			page 30
+ARM GAS  /tmp/cc3dulPZ.s 			page 30
 
 
  323              		.loc 1 193 3 is_stmt 1 view .LVU93
@@ -1798,7 +1798,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  360              	.LVL7:
  211:Core/Src/main.c ****   TxConfig.ChecksumCtrl = ETH_CHECKSUM_IPHDR_PAYLOAD_INSERT_PHDR_CALC;
  361              		.loc 1 211 3 view .LVU111
-ARM GAS  /tmp/cc6F1zNN.s 			page 31
+ARM GAS  /tmp/cc3dulPZ.s 			page 31
 
 
  211:Core/Src/main.c ****   TxConfig.ChecksumCtrl = ETH_CHECKSUM_IPHDR_PAYLOAD_INSERT_PHDR_CALC;
@@ -1858,7 +1858,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  409 0006 0360     		str	r3, [r0]
  236:Core/Src/main.c ****   huart3.Init.WordLength = UART_WORDLENGTH_8B;
  410              		.loc 1 236 3 is_stmt 1 view .LVU121
-ARM GAS  /tmp/cc6F1zNN.s 			page 32
+ARM GAS  /tmp/cc3dulPZ.s 			page 32
 
 
  236:Core/Src/main.c ****   huart3.Init.WordLength = UART_WORDLENGTH_8B;
@@ -1918,7 +1918,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  447 002a 00BF     		.align	2
  448              	.L17:
  449 002c 00000000 		.word	huart3
-ARM GAS  /tmp/cc6F1zNN.s 			page 33
+ARM GAS  /tmp/cc3dulPZ.s 			page 33
 
 
  450 0030 00480040 		.word	1073760256
@@ -1978,7 +1978,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  493 0018 0122     		movs	r2, #1
  494 001a 8272     		strb	r2, [r0, #10]
  274:Core/Src/main.c ****   hpcd_USB_OTG_FS.Init.lpm_enable = DISABLE;
-ARM GAS  /tmp/cc6F1zNN.s 			page 34
+ARM GAS  /tmp/cc3dulPZ.s 			page 34
 
 
  495              		.loc 1 274 3 is_stmt 1 view .LVU153
@@ -2038,7 +2038,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  538              		@ frame_needed = 0, uses_anonymous_args = 0
  539 0000 00B5     		push	{lr}
  540              	.LCFI6:
-ARM GAS  /tmp/cc6F1zNN.s 			page 35
+ARM GAS  /tmp/cc3dulPZ.s 			page 35
 
 
  541              		.cfi_def_cfa_offset 4
@@ -2098,7 +2098,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  582              		.loc 1 138 3 view .LVU179
  583 0032 1C4B     		ldr	r3, .L31+4
  584 0034 1A68     		ldr	r2, [r3]
-ARM GAS  /tmp/cc6F1zNN.s 			page 36
+ARM GAS  /tmp/cc3dulPZ.s 			page 36
 
 
  585 0036 42F44042 		orr	r2, r2, #49152
@@ -2158,7 +2158,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  150:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
  622              		.loc 1 150 3 is_stmt 1 view .LVU197
  150:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-ARM GAS  /tmp/cc6F1zNN.s 			page 37
+ARM GAS  /tmp/cc3dulPZ.s 			page 37
 
 
  623              		.loc 1 150 30 is_stmt 0 view .LVU198
@@ -2218,7 +2218,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  169:Core/Src/main.c **** 
  661              		.loc 1 169 1 view .LVU215
  662 0092 15B0     		add	sp, sp, #84
-ARM GAS  /tmp/cc6F1zNN.s 			page 38
+ARM GAS  /tmp/cc3dulPZ.s 			page 38
 
 
  663              	.LCFI8:
@@ -2278,7 +2278,7 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  713              	.LVL20:
  103:Core/Src/main.c ****   MX_USART3_UART_Init();
  714              		.loc 1 103 3 view .LVU222
-ARM GAS  /tmp/cc6F1zNN.s 			page 39
+ARM GAS  /tmp/cc3dulPZ.s 			page 39
 
 
  715 000e FFF7FEFF 		bl	MX_ETH_Init
@@ -2294,162 +2294,145 @@ ARM GAS  /tmp/cc6F1zNN.s 			page 1
  723              	.L34:
  112:Core/Src/main.c ****   {
  724              		.loc 1 112 3 view .LVU225
- 117:Core/Src/main.c ****     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7); // Toggle LED
- 725              		.loc 1 117 5 view .LVU226
- 726 001a 094C     		ldr	r4, .L36
- 727 001c 4FF48041 		mov	r1, #16384
- 728 0020 2046     		mov	r0, r4
- 729 0022 FFF7FEFF 		bl	HAL_GPIO_TogglePin
- 730              	.LVL24:
- 118:Core/Src/main.c ****     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle LED
- 731              		.loc 1 118 5 view .LVU227
- 732 0026 8021     		movs	r1, #128
- 733 0028 2046     		mov	r0, r4
- 734 002a FFF7FEFF 		bl	HAL_GPIO_TogglePin
- 735              	.LVL25:
- 119:Core/Src/main.c **** 
- 736              		.loc 1 119 5 view .LVU228
- 737 002e 2021     		movs	r1, #32
- 738 0030 0448     		ldr	r0, .L36+4
- 739 0032 FFF7FEFF 		bl	HAL_GPIO_TogglePin
- 740              	.LVL26:
+ 118:Core/Src/main.c ****     //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle LED
+ 725              		.loc 1 118 5 view .LVU226
+ 726 001a 8021     		movs	r1, #128
+ 727 001c 0348     		ldr	r0, .L36
+ 728 001e FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 729              	.LVL24:
  121:Core/Src/main.c ****   }
- 741              		.loc 1 121 5 discriminator 1 view .LVU229
- 742 0036 4FF47A70 		mov	r0, #1000
- 743 003a FFF7FEFF 		bl	HAL_Delay
- 744              	.LVL27:
+ 730              		.loc 1 121 5 discriminator 1 view .LVU227
+ 731 0022 4FF47A70 		mov	r0, #1000
+ 732 0026 FFF7FEFF 		bl	HAL_Delay
+ 733              	.LVL25:
  112:Core/Src/main.c ****   {
- 745              		.loc 1 112 9 view .LVU230
- 746 003e ECE7     		b	.L34
- 747              	.L37:
- 748              		.align	2
- 749              	.L36:
- 750 0040 00040240 		.word	1073873920
- 751 0044 00000240 		.word	1073872896
- 752              		.cfi_endproc
- 753              	.LFE134:
- 755              		.section	.bss.MACAddr.0,"aw",%nobits
- 756              		.align	2
- 759              	MACAddr.0:
- 760 0000 00000000 		.space	6
- 760      0000
- 761              		.global	hpcd_USB_OTG_FS
- 762              		.section	.bss.hpcd_USB_OTG_FS,"aw",%nobits
- 763              		.align	2
- 766              	hpcd_USB_OTG_FS:
- 767 0000 00000000 		.space	1252
-ARM GAS  /tmp/cc6F1zNN.s 			page 40
+ 734              		.loc 1 112 9 view .LVU228
+ 735 002a F6E7     		b	.L34
+ 736              	.L37:
+ 737              		.align	2
+ 738              	.L36:
+ 739 002c 00040240 		.word	1073873920
+ 740              		.cfi_endproc
+ 741              	.LFE134:
+ 743              		.section	.bss.MACAddr.0,"aw",%nobits
+ 744              		.align	2
+ 747              	MACAddr.0:
+ 748 0000 00000000 		.space	6
+ 748      0000
+ 749              		.global	hpcd_USB_OTG_FS
+ 750              		.section	.bss.hpcd_USB_OTG_FS,"aw",%nobits
+ 751              		.align	2
+ 754              	hpcd_USB_OTG_FS:
+ 755 0000 00000000 		.space	1252
+ 755      00000000 
+ 755      00000000 
+ 755      00000000 
+ 755      00000000 
+ 756              		.global	huart3
+ 757              		.section	.bss.huart3,"aw",%nobits
+ 758              		.align	2
+ 761              	huart3:
+ 762 0000 00000000 		.space	72
+ 762      00000000 
+ 762      00000000 
+ 762      00000000 
+ 762      00000000 
+ 763              		.global	heth
+ARM GAS  /tmp/cc3dulPZ.s 			page 40
 
 
- 767      00000000 
- 767      00000000 
- 767      00000000 
- 767      00000000 
- 768              		.global	huart3
- 769              		.section	.bss.huart3,"aw",%nobits
- 770              		.align	2
- 773              	huart3:
- 774 0000 00000000 		.space	72
- 774      00000000 
- 774      00000000 
- 774      00000000 
- 774      00000000 
- 775              		.global	heth
- 776              		.section	.bss.heth,"aw",%nobits
- 777              		.align	2
- 780              	heth:
- 781 0000 00000000 		.space	176
- 781      00000000 
- 781      00000000 
- 781      00000000 
- 781      00000000 
- 782              		.global	DMATxDscrTab
- 783              		.section	.bss.DMATxDscrTab,"aw",%nobits
- 784              		.align	2
- 787              	DMATxDscrTab:
- 788 0000 00000000 		.space	160
- 788      00000000 
- 788      00000000 
- 788      00000000 
- 788      00000000 
- 789              		.global	DMARxDscrTab
- 790              		.section	.bss.DMARxDscrTab,"aw",%nobits
- 791              		.align	2
- 794              	DMARxDscrTab:
- 795 0000 00000000 		.space	160
- 795      00000000 
- 795      00000000 
- 795      00000000 
- 795      00000000 
- 796              		.global	TxConfig
- 797              		.section	.bss.TxConfig,"aw",%nobits
- 798              		.align	2
- 801              	TxConfig:
- 802 0000 00000000 		.space	56
- 802      00000000 
- 802      00000000 
- 802      00000000 
- 802      00000000 
- 803              		.text
- 804              	.Letext0:
- 805              		.file 3 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
- 806              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f439xx.h"
- 807              		.file 5 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stddef.h"
- 808              		.file 6 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h"
- 809              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 810              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h"
-ARM GAS  /tmp/cc6F1zNN.s 			page 41
-
-
- 811              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h"
- 812              		.file 10 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
- 813              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 814              		.file 12 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_eth.h"
- 815              		.file 13 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
- 816              		.file 14 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h"
- 817              		.file 15 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h"
- 818              		.file 16 "/usr/include/newlib/string.h"
- 819              		.file 17 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
- 820              		.file 18 "<built-in>"
-ARM GAS  /tmp/cc6F1zNN.s 			page 42
+ 764              		.section	.bss.heth,"aw",%nobits
+ 765              		.align	2
+ 768              	heth:
+ 769 0000 00000000 		.space	176
+ 769      00000000 
+ 769      00000000 
+ 769      00000000 
+ 769      00000000 
+ 770              		.global	DMATxDscrTab
+ 771              		.section	.bss.DMATxDscrTab,"aw",%nobits
+ 772              		.align	2
+ 775              	DMATxDscrTab:
+ 776 0000 00000000 		.space	160
+ 776      00000000 
+ 776      00000000 
+ 776      00000000 
+ 776      00000000 
+ 777              		.global	DMARxDscrTab
+ 778              		.section	.bss.DMARxDscrTab,"aw",%nobits
+ 779              		.align	2
+ 782              	DMARxDscrTab:
+ 783 0000 00000000 		.space	160
+ 783      00000000 
+ 783      00000000 
+ 783      00000000 
+ 783      00000000 
+ 784              		.global	TxConfig
+ 785              		.section	.bss.TxConfig,"aw",%nobits
+ 786              		.align	2
+ 789              	TxConfig:
+ 790 0000 00000000 		.space	56
+ 790      00000000 
+ 790      00000000 
+ 790      00000000 
+ 790      00000000 
+ 791              		.text
+ 792              	.Letext0:
+ 793              		.file 3 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 794              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f439xx.h"
+ 795              		.file 5 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stddef.h"
+ 796              		.file 6 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h"
+ 797              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 798              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h"
+ 799              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h"
+ 800              		.file 10 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 801              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 802              		.file 12 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_eth.h"
+ 803              		.file 13 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 804              		.file 14 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h"
+ 805              		.file 15 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h"
+ 806              		.file 16 "/usr/include/newlib/string.h"
+ 807              		.file 17 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ 808              		.file 18 "<built-in>"
+ARM GAS  /tmp/cc3dulPZ.s 			page 41
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-     /tmp/cc6F1zNN.s:21     .text.MX_GPIO_Init:00000000 $t
-     /tmp/cc6F1zNN.s:26     .text.MX_GPIO_Init:00000000 MX_GPIO_Init
-     /tmp/cc6F1zNN.s:239    .text.MX_GPIO_Init:000000f8 $d
-     /tmp/cc6F1zNN.s:247    .text.Error_Handler:00000000 $t
-     /tmp/cc6F1zNN.s:253    .text.Error_Handler:00000000 Error_Handler
-     /tmp/cc6F1zNN.s:285    .text.MX_ETH_Init:00000000 $t
-     /tmp/cc6F1zNN.s:290    .text.MX_ETH_Init:00000000 MX_ETH_Init
-     /tmp/cc6F1zNN.s:379    .text.MX_ETH_Init:00000054 $d
-     /tmp/cc6F1zNN.s:780    .bss.heth:00000000 heth
-     /tmp/cc6F1zNN.s:759    .bss.MACAddr.0:00000000 MACAddr.0
-     /tmp/cc6F1zNN.s:787    .bss.DMATxDscrTab:00000000 DMATxDscrTab
-     /tmp/cc6F1zNN.s:794    .bss.DMARxDscrTab:00000000 DMARxDscrTab
-     /tmp/cc6F1zNN.s:801    .bss.TxConfig:00000000 TxConfig
-     /tmp/cc6F1zNN.s:389    .text.MX_USART3_UART_Init:00000000 $t
-     /tmp/cc6F1zNN.s:394    .text.MX_USART3_UART_Init:00000000 MX_USART3_UART_Init
-     /tmp/cc6F1zNN.s:449    .text.MX_USART3_UART_Init:0000002c $d
-     /tmp/cc6F1zNN.s:773    .bss.huart3:00000000 huart3
-     /tmp/cc6F1zNN.s:455    .text.MX_USB_OTG_FS_PCD_Init:00000000 $t
-     /tmp/cc6F1zNN.s:460    .text.MX_USB_OTG_FS_PCD_Init:00000000 MX_USB_OTG_FS_PCD_Init
-     /tmp/cc6F1zNN.s:522    .text.MX_USB_OTG_FS_PCD_Init:00000030 $d
-     /tmp/cc6F1zNN.s:766    .bss.hpcd_USB_OTG_FS:00000000 hpcd_USB_OTG_FS
-     /tmp/cc6F1zNN.s:527    .text.SystemClock_Config:00000000 $t
-     /tmp/cc6F1zNN.s:533    .text.SystemClock_Config:00000000 SystemClock_Config
-     /tmp/cc6F1zNN.s:681    .text.SystemClock_Config:000000a0 $d
-     /tmp/cc6F1zNN.s:687    .text.main:00000000 $t
-     /tmp/cc6F1zNN.s:693    .text.main:00000000 main
-     /tmp/cc6F1zNN.s:750    .text.main:00000040 $d
-     /tmp/cc6F1zNN.s:756    .bss.MACAddr.0:00000000 $d
-     /tmp/cc6F1zNN.s:763    .bss.hpcd_USB_OTG_FS:00000000 $d
-     /tmp/cc6F1zNN.s:770    .bss.huart3:00000000 $d
-     /tmp/cc6F1zNN.s:777    .bss.heth:00000000 $d
-     /tmp/cc6F1zNN.s:784    .bss.DMATxDscrTab:00000000 $d
-     /tmp/cc6F1zNN.s:791    .bss.DMARxDscrTab:00000000 $d
-     /tmp/cc6F1zNN.s:798    .bss.TxConfig:00000000 $d
+     /tmp/cc3dulPZ.s:21     .text.MX_GPIO_Init:00000000 $t
+     /tmp/cc3dulPZ.s:26     .text.MX_GPIO_Init:00000000 MX_GPIO_Init
+     /tmp/cc3dulPZ.s:239    .text.MX_GPIO_Init:000000f8 $d
+     /tmp/cc3dulPZ.s:247    .text.Error_Handler:00000000 $t
+     /tmp/cc3dulPZ.s:253    .text.Error_Handler:00000000 Error_Handler
+     /tmp/cc3dulPZ.s:285    .text.MX_ETH_Init:00000000 $t
+     /tmp/cc3dulPZ.s:290    .text.MX_ETH_Init:00000000 MX_ETH_Init
+     /tmp/cc3dulPZ.s:379    .text.MX_ETH_Init:00000054 $d
+     /tmp/cc3dulPZ.s:768    .bss.heth:00000000 heth
+     /tmp/cc3dulPZ.s:747    .bss.MACAddr.0:00000000 MACAddr.0
+     /tmp/cc3dulPZ.s:775    .bss.DMATxDscrTab:00000000 DMATxDscrTab
+     /tmp/cc3dulPZ.s:782    .bss.DMARxDscrTab:00000000 DMARxDscrTab
+     /tmp/cc3dulPZ.s:789    .bss.TxConfig:00000000 TxConfig
+     /tmp/cc3dulPZ.s:389    .text.MX_USART3_UART_Init:00000000 $t
+     /tmp/cc3dulPZ.s:394    .text.MX_USART3_UART_Init:00000000 MX_USART3_UART_Init
+     /tmp/cc3dulPZ.s:449    .text.MX_USART3_UART_Init:0000002c $d
+     /tmp/cc3dulPZ.s:761    .bss.huart3:00000000 huart3
+     /tmp/cc3dulPZ.s:455    .text.MX_USB_OTG_FS_PCD_Init:00000000 $t
+     /tmp/cc3dulPZ.s:460    .text.MX_USB_OTG_FS_PCD_Init:00000000 MX_USB_OTG_FS_PCD_Init
+     /tmp/cc3dulPZ.s:522    .text.MX_USB_OTG_FS_PCD_Init:00000030 $d
+     /tmp/cc3dulPZ.s:754    .bss.hpcd_USB_OTG_FS:00000000 hpcd_USB_OTG_FS
+     /tmp/cc3dulPZ.s:527    .text.SystemClock_Config:00000000 $t
+     /tmp/cc3dulPZ.s:533    .text.SystemClock_Config:00000000 SystemClock_Config
+     /tmp/cc3dulPZ.s:681    .text.SystemClock_Config:000000a0 $d
+     /tmp/cc3dulPZ.s:687    .text.main:00000000 $t
+     /tmp/cc3dulPZ.s:693    .text.main:00000000 main
+     /tmp/cc3dulPZ.s:739    .text.main:0000002c $d
+     /tmp/cc3dulPZ.s:744    .bss.MACAddr.0:00000000 $d
+     /tmp/cc3dulPZ.s:751    .bss.hpcd_USB_OTG_FS:00000000 $d
+     /tmp/cc3dulPZ.s:758    .bss.huart3:00000000 $d
+     /tmp/cc3dulPZ.s:765    .bss.heth:00000000 $d
+     /tmp/cc3dulPZ.s:772    .bss.DMATxDscrTab:00000000 $d
+     /tmp/cc3dulPZ.s:779    .bss.DMARxDscrTab:00000000 $d
+     /tmp/cc3dulPZ.s:786    .bss.TxConfig:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_GPIO_WritePin
