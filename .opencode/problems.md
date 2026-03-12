@@ -183,6 +183,99 @@ swmgr install stm32cube_f4_1.28.2 ask
 
 ---
 
+## 11. Development Reference Project
+
+### test439/ Directory Purpose
+
+The `test439/` directory in this repository is a **development and testing reference only**. It is used during framework development to verify builds and functionality.
+
+**Important Notes**:
+- This directory is NOT part of the shipped framework
+- It may be removed or modified at any time
+- It serves as a temporary reference for validating the CI/CD pipeline
+- Users should generate their own projects using the project-generator script
+
+---
+
+## 12. Local Development Setup
+
+### Overview
+
+For local development, users can run the same STM32CubeMX code generation used in CI/CD. This ensures consistency between local and CI environments.
+
+### Prerequisites
+
+```bash
+# Core build tools
+sudo apt update
+sudo apt install make build-essential
+
+# ARM GCC toolchain
+sudo apt install gcc-arm-none-eabi gdb-multiarch
+
+# ST-Link for flashing
+sudo apt install openocd libusb-1.0-0-dev
+
+# Java (required for STM32CubeMX)
+sudo apt install openjdk-11-jre
+
+# Virtual display for headless CubeMX
+sudo apt install xvfb
+```
+
+### STM32CubeMX Installation
+
+Download and install STM32CubeMX with automated options:
+
+```bash
+wget https://stm32-cube-mx.s3.eu-central-1.amazonaws.com/stm32cubemx-lin-v6-15-0.zip -O stm32cubemx.zip
+unzip stm32cubemx.zip
+chmod +x SetupSTM32CubeMX-*
+
+# Install with auto-accept (using cubemx-auto.xml)
+./SetupSTM32CubeMX-6.15.0 -c --option-file /path/to/cubemx-auto.xml
+```
+
+### Local Build and Flash Workflow
+
+1. **Generate code** (from project directory):
+   ```bash
+   xvfb-run -a STM32CubeMX -i generate_script.txt
+   ```
+
+2. **Compile**:
+   ```bash
+   make
+   ```
+
+3. **Flash with OpenOCD**:
+   ```bash
+   openocd -f interface/stlink.cfg -f target/stm32f4x.cfg \
+     -c "program build/project.elf verify reset exit"
+   ```
+
+4. **Debug with GDB**:
+   ```bash
+   # Start OpenOCD in one terminal
+   openocd -f interface/stlink.cfg -f target/stm32f4x.cfg
+   
+   # In another terminal
+   gdb-multiarch build/project.elf
+   (gdb) target extended-remote tcp:127.0.0.1:3333
+   (gdb) monitor reset halt
+   (gdb) load
+   (gdb) monitor reset
+   (gdb) continue
+   ```
+
+### See Also
+
+- `.github/workflows/stm32_generate_code.yml` - CI/CD pipeline reference
+- `generate_script.txt` - Example CubeMX script
+- `docker/cubemx-runner.sh` - Wrapper script for running CubeMX
+
+---
+
 ## Summary of Priority Issues
 
 | Priority | Issue | Impact |

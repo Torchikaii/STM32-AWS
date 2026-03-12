@@ -63,6 +63,7 @@ Enable embedded developers to rapidly deploy STM32-based IoT devices with reliab
 - [ ] **AWS IoT Core**: MQTT over TLS connectivity
 - [ ] **Device Shadow**: Direct shadow for command/control
 - [ ] **CI/CD Pipeline**: GitHub Actions with STM32CubeMX code generation
+- [ ] **Project Generator**: TUI script for creating new STM32 projects
 - [ ] **Latency Measurement**: Full end-to-end benchmarking with correlation IDs
 - [ ] **Time Monitoring**: Real-time measurement of command execution, database writes, and cloud round-trip times
 - [ ] **PostgreSQL Database**: AWS RDS for metrics storage
@@ -93,6 +94,8 @@ Enable embedded developers to rapidly deploy STM32-based IoT devices with reliab
 3. **As an** embedded developer, **I want** to know exactly how long each operation takes (database write, command execution, cloud round-trip) **so that** I can identify bottlenecks and optimize my system.
 
 4. **As an** embedded developer, **I want** to add the framework to a new STM32 project with minimal configuration **so that** I can start building my application immediately.
+
+5. **As an** embedded developer, **I want** to use a simple TUI script to create new STM32 projects **so that** I don't have to manually set up CubeMX and Makefile.
 
 ### Operations Stories
 
@@ -153,10 +156,13 @@ MCU Send ──[correlation_uuid, payload, DWT_timestamp]──▶ AWS IoT Core
 | Component | Responsibility |
 |----------|----------------|
 | `STM32-AWS-Framework` | Core library for MCU connectivity |
+| `project-generator` | TUI script for creating new STM32 projects |
 | `stm32-cubemx-generator` | CI/CD code generation automation |
 | `aws-infrastructure` | Terraform modules for cloud resources |
 | `latency-collector` | Data pipeline from IoT to database |
 | `ec2-control-server` | Command execution service |
+
+> **Note**: This is a brief overview of the intended project structure. It is subject to change as the project evolves.
 
 ### Directory Structure
 
@@ -169,17 +175,41 @@ STM32-AWS/
 │   ├── main.tf
 │   ├── variables.tf
 │   └── modules/
-├── test439/                            # Reference project (STM32F439ZI)
-│   ├── test439.ioc                    # CubeMX configuration
-│   └── Core/Src/main.c
-├── docker/
-│   └── cubemx-runner/                 # Docker image for CI
 ├── src/                               # Framework source
 │   ├── ethernet/
 │   ├── mqtt/
 │   └── latency/
+├── scripts/
+│   └── project-generator/              # TUI for creating new projects
+├── docker/
+│   └── cubemx-runner/                 # Docker image for CI
 └── docs/
 ```
+
+### Framework Usage Model
+
+The framework does NOT ship with bundled projects for each MCU. Instead:
+
+1. **Project Generation**: Users run the `project-generator` TUI script which prompts for:
+   - STM32CubeMX credentials (stored for future CI/CD runs)
+   - MCU type (e.g., STM32F439ZI)
+   - Project name and location
+   - Required peripherals (Ethernet, USB, etc.)
+
+2. **Generation Process**: The script:
+   - Creates a new STM32CubeMX .ioc file
+   - Generates Makefile-based project
+   - Integrates the STM32-AWS-Framework source
+
+3. **User Workflow**:
+   ```
+   ./scripts/project-generator.sh
+   → Select MCU type
+   → Enter project name
+   → Select peripherals
+   → Generate project
+   → cd myproject && make
+   ```
 
 ---
 
@@ -211,6 +241,7 @@ STM32-AWS/
 | Component | Technology |
 |-----------|------------|
 | Build Runner | GitHub Actions |
+| Build System | Make (Makefile) |
 | Container | Custom Docker (STM32CubeMX + ARM GCC) |
 | Virtual Display | xvfb |
 | Automation | expect / xdotool |
@@ -253,38 +284,16 @@ STM32-AWS/
 
 ### Latency Metrics Schema (PostgreSQL)
 
-```sql
-CREATE TABLE latency_metrics (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    correlation_id UUID NOT NULL,
-    device_id VARCHAR(64) NOT NULL,
-    
-    -- MCU timestamps (DWT cycle counter)
-    mcu_send_time BIGINT,           -- Hardware cycle count
-    mcu_receive_time BIGINT,
-    mcu_cpu_hz INTEGER DEFAULT 168000000,
-    
-    -- Cloud timestamps
-    iot_receive_time TIMESTAMP,
-    db_write_time TIMESTAMP,
-    command_execute_start TIMESTAMP,
-    command_execute_end TIMESTAMP,
-    response_send_time TIMESTAMP,
-    
-    -- Calculated latencies (ms)
-    latency_mcu_to_iot NUMERIC(10,3),
-    latency_iot_to_db NUMERIC(10,3),
-    latency_command_exec NUMERIC(10,3),
-    latency_total NUMERIC(10,3),
-    
-    payload JSONB,
-    created_at TIMESTAMP DEFAULT NOW()
-);
+The database stores time measurements for each operation, allowing analysis of where delays occur. Each record includes:
 
-CREATE INDEX idx_latency_correlation ON latency_metrics(correlation_id);
-CREATE INDEX idx_latency_device ON latency_metrics(device_id);
-CREATE INDEX idx_latency_created ON latency_metrics(created_at);
-```
+- **Correlation ID**: Links all timestamps for a single request across the entire chain
+- **Device ID**: Identifies which MCU sent the data
+- **MCU Timestamps**: Hardware cycle counts from the STM32 (for precise microsecond-level timing)
+- **Cloud Timestamps**: Server-side timestamps when messages arrive at IoT Core and when data is written to the database
+- **Calculated Latencies**: Pre-computed differences showing how long each step took (e.g., MCU to IoT, IoT to DB, command execution)
+- **Payload**: The original JSON data for debugging
+
+This structure enables querying to identify which component causes delays - the MCU, network, cloud processing, or database operations.
 
 ---
 
