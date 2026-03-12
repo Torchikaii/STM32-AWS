@@ -1,0 +1,36 @@
+#!/usr/bin/expect -f
+
+set timeout 120
+
+if {[llength $argv] < 1} {
+    puts "Usage: $argv0 <command> \[args...\]"
+    exit 1
+}
+
+set cmd [lindex $argv 0]
+set args [lrange $argv 1 end]
+
+eval spawn $cmd $args
+
+expect {
+    -re "License Agreement|License.*Accept|Accept.*License" {
+        sleep 1
+        send "\t"
+        sleep 0.5
+        send "\t"
+        sleep 0.5
+        send "\r"
+        exp_internal 0
+    }
+    timeout {
+        puts "ERROR: Timeout waiting for license dialog"
+        exit 1
+    }
+    eof {
+        puts "Process completed without license dialog"
+    }
+}
+
+expect eof
+catch wait result
+exit [lindex $result 3]
