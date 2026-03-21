@@ -57,7 +57,6 @@ jobs:
 
       # Login to ST Account & Download STM32F4 firmware package & Load .ioc Configuration & Generate C Code & Makefile
       - name: Run STM32CubeMX
-#        continue-on-error: true
         id: generate
         timeout-minutes: 5
         run: |
@@ -65,7 +64,8 @@ jobs:
           echo "Using SCRIPT_PATH=$SCRIPT_PATH"
           echo "Using HOME=$HOME"
           echo "Using PWD=$PWD"
-          xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
+          xvfb-run -a -s "-screen 0 1024x768x24" \
+            /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
 
       # Install ARM GCC Toolchain
       - name: Install ARM GCC toolchain

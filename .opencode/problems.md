@@ -8,32 +8,20 @@ This document outlines known problems, technical challenges, and limitations enc
 
 ### Problem: License Agreement Dialog in Headless Environments
 
-**Description**: When running `swmgr install` for a firmware package that hasn't been downloaded, STM32CubeMX displays a GUI license acceptance dialog. In headless CI/CD environments (using xvfb), this dialog appears but cannot be interacted with, causing the pipeline to hang indefinitely.
+**Status**: ✅ RESOLVED
 
-**Affected Command**:
-```bash
-swmgr install stm32cube_f4_1.28.2 ask
-```
+**Solution**: Users accept license once when building their Docker image. The license acceptance is stored in `~/.STM32CubeMX/` and persisted in the Docker image layer via `docker commit`.
 
-**Root Cause**: 
-- The `swmgr install` command only supports two modes: `deny` (won't install) or `ask` (shows GUI dialog)
-- There is NO silent/automatic license acceptance flag (e.g., `--yes` or `-y`)
-- xvfb provides a virtual display but cannot simulate mouse clicks or keyboard input
-
-**Impact**: 
-- CI/CD pipeline hangs when generating code for a new MCU family
-- F407 worked on main branch because F4 firmware was pre-installed in container
-- F439 fails on this branch because F4 firmware needs to be downloaded
-
-**Workaround Approaches**:
-1. **expect**: Create expect script to handle text-based prompts (simpler, lighter)
-2. **xdotool**: Use X11 automation to click GUI buttons (more robust)
-3. **Pre-install firmware**: Build Docker image with all firmware packages pre-installed
+**Workflow**:
+1. Build Docker image from Dockerfile
+2. Run container interactively: `docker run -it --name cubemx-container <image> bash`
+3. Launch CubeMX with xvfb, accept license once
+4. Commit container: `docker commit cubemx-container <image>:licensed`
+5. Use licensed image for CI/CD
 
 **Related Files**:
-- `.github/workflows/stm32_generate_code.yml`
-- `docker/Dockerfile` (needs update)
-- `generate_script.sh`
+- `Dockerfile` - base image with CubeMX installed
+- `docs/testing-CICD-locally.md` - documentation
 
 ---
 
@@ -272,20 +260,19 @@ chmod +x SetupSTM32CubeMX-*
 
 - `.github/workflows/stm32_generate_code.yml` - CI/CD pipeline reference
 - `generate_script.txt` - Example CubeMX script
-- `docker/cubemx-runner.sh` - Wrapper script for running CubeMX
 
 ---
 
 ## Summary of Priority Issues
 
-| Priority | Issue | Impact |
-|----------|-------|--------|
-| 🔴 Critical | License dialog in CI | Pipeline hangs |
-| 🔴 Critical | CI consistency | Blocks development |
-| 🟠 High | Multi-MCU support | Core requirement |
-| 🟡 Medium | TLS memory constraints | Performance |
-| 🟡 Medium | Latency precision | Core feature |
-| 🟢 Low | Cost optimization | Future concern |
+| Priority | Issue | Impact | Status |
+|----------|-------|--------|--------|
+| 🔴 Critical | License dialog in CI | Pipeline hangs | ✅ Resolved |
+| 🔴 Critical | CI consistency | Blocks development | ✅ Resolved |
+| 🟠 High | Multi-MCU support | Core requirement | Pending |
+| 🟡 Medium | TLS memory constraints | Performance | Pending |
+| 🟡 Medium | Latency precision | Core feature | Pending |
+| 🟢 Low | Cost optimization | Future concern | Pending |
 
 ---
 
