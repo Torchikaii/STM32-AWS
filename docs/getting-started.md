@@ -60,7 +60,13 @@ docker commit cubemx-container stm32-aws/cubemx-runner:dev
 docker rm cubemx-container
 ```
 
-### 7. Push to GHCR
+### 7. Tag docker container
+
+```bash
+docker tag stm32-aws/cubemx-runner:dev ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev
+```
+
+### 8. Push to GHCR
 ```bash
 docker push ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev
 ```
@@ -91,11 +97,10 @@ docker run -it --rm \
 cd /github/workspace
 ./generate_script.sh
 ./run-cubemx.sh
-cd test439
-make
 ```
 
 ### 3. (Optional) Flash to MCU
 ```bash
+cd test439
 ./compile-flash.sh
 ```
