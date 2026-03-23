@@ -25,24 +25,48 @@ docker run -it \
   bash
 ```
 
-### 3. Inside container - accept license
+### 3. Install vim inside docker container
+
+```bash
+apt-get update
+apt-get install vim
+```
+
+### 4. Edit run-cubemx.sh, to run without xvbf 
+
+Replace
+
+```bash
+xvfb-run -a -s "-screen 0 1024x768x24" \
+    "$CUBEMX_PATH" -q "$SCRIPT_PATH"
+```
+
+with 
+```
+$CUBEMX_PATH -q $SCRIPT_PATH
+```
+
+### 5. Inside container - accept license
 ```bash
 ./generate_script.sh
 ./run-cubemx.sh
 ```
 Accept the license popup when it appears. Scripts continue after acceptance.
 
-### 4. Exit container and commit changes
+### 6. Exit container and commit changes
 ```bash
 exit
 docker commit cubemx-container stm32-aws/cubemx-runner:dev
 docker rm cubemx-container
 ```
 
-### 5. Push to GHCR (optional)
+### 7. Push to GHCR
 ```bash
-docker push stm32-aws/cubemx-runner:dev
+docker push ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev
 ```
+
+further sections needs review
+----------------
 
 ## Normal Workflow
 
