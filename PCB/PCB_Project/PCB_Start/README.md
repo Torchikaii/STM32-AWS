@@ -1,1 +1,0 @@
-Here are located initial PCB files. They were neglected. Only schematics are present, but no completed PCB files yet.

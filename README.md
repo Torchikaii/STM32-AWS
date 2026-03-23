@@ -1,28 +1,18 @@
 # STM32-AWS
 
-> ⚠️ **This project is in a very early stage of development.**  
-> Features and documentation are actively being developed—expect rapid changes!
+CI/CD pipeline for STM32 projects with STM32CubeMX automation.
 
-## About
+## Quick Start
 
-STM32-AWS is an experimental project aiming to connect STM32 microcontrollers to AWS IoT services.  
-The project is open to contributors and is currently in its foundational phase.
+See [docs/getting-started.md](docs/getting-started.md)
 
+## What This Does
 
-## Contributing
+- Generates STM32 code from CubeMX .ioc files
+- Compiles with ARM GCC
+- Flashes to STM32F439 MCU
 
-We welcome your help!  
-- Please check open issues and discussions.
-- Create a branch (e.g., `feat/12-update-readme`) for your work.
-- Open a pull request with a clear summary of your changes.
+## Documentation
 
-## Roadmap
-
-- [ ] Initial connectivity to AWS IoT
-- [ ] Device registration and management
-- [ ] Secure communication
-
----
-
-Thank you for your interest in STM32-AWS!  
-Feel free to open issues and suggest improvements.
+- [Getting Started](docs/getting-started.md)
+- [Testing Locally](docs/testing-CICD-locally.md)

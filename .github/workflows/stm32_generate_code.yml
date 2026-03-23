@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEBUG: ${{ github.event.inputs.debug }}
+      PROJECT_PATH: test439
 
     container:
 #      image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
@@ -33,54 +34,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      # Create CubeMX Script
       - name: Create generate_script.txt
-        shell: bash
         env:
           ST_CUBE_EMAIL: ${{ secrets.ACCOUNT_EMAIL }}
           ST_CUBE_PASSWORD: ${{ secrets.ACCOUNT_PASSWORD }}
-        run: |
-          echo "login \"${ST_CUBE_EMAIL}\" \"${ST_CUBE_PASSWORD}\" y" > generate_script.txt
-          echo "swmgr refresh" >> generate_script.txt
-          echo "swmgr install stm32cube_f4_1.28.2 ask" >> generate_script.txt
-          echo "config load \"/__w/STM32-AWS/STM32-AWS/Initial_project.ioc\"" >> generate_script.txt
-          echo "project toolchain \"Makefile\"" >> generate_script.txt
-          echo "project path \"/__w/STM32-AWS/STM32-AWS\"" >> generate_script.txt
-          echo "project name \"Initial_project\"" >> generate_script.txt
-          echo "project generateunderroot 1" >> generate_script.txt
-          echo "project generate" >> generate_script.txt
-          echo "exit" >> generate_script.txt
+        run: ./generate_script.sh
 
-      - run: echo $PWD
-
-      # Login to ST Account & Download STM32F4 firmware package & Load .ioc Configuration & Generate C Code & Makefile
       - name: Run STM32CubeMX
-#        continue-on-error: true
         id: generate
         timeout-minutes: 5
         run: |
-          SCRIPT_PATH="$(realpath "generate_script.txt")"
-          echo "Using SCRIPT_PATH=$SCRIPT_PATH"
-          echo "Using HOME=$HOME"
-          echo "Using PWD=$PWD"
-          xvfb-run -a -s "-screen 0 1024x768x24" /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
-
-      # Install ARM GCC Toolchain
-      - name: Install ARM GCC toolchain
-        run: |
-          apt-get update
-          apt-get install -y \
-            build-essential \
-            gcc-arm-none-eabi \
-            binutils-arm-none-eabi \
-            libnewlib-arm-none-eabi \
-            make
+          xvfb-run -a -s "-screen 0 1024x768x24" \
+            /opt/STM32CubeMX/STM32CubeMX -q "$(realpath generate_script.txt)"
 
       # Compile Firmware & Generate ELF/BIN/HEX & Size Analysis
       - name: Build firmware
         id: build
         if: steps.generate.outcome == 'success'
-        working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
+        working-directory: ${{ env.PROJECT_PATH }}
 #        continue-on-error: true
         env:
           MAKEFLAGS: -j$(nproc)
@@ -90,7 +61,7 @@ jobs:
 
       # Check Artifacts Exist
       - name: Check build artifacts
-        working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
+        working-directory: ${{ env.PROJECT_PATH }}
         run: |
           ls -la build || ls -la .
           ELF=$(ls build/*.elf 2>/dev/null || ls *.elf)
@@ -101,7 +72,7 @@ jobs:
 
       # Enforce Size Budgets (STM32F407: ~1MB Flash, 192KB RAM)
       - name: Enforce size budgets
-        working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
+        working-directory: ${{ env.PROJECT_PATH }}
         shell: bash
         run: |
           set -euo pipefail
@@ -117,7 +88,7 @@ jobs:
 
       # ELF Sanity Checks & Vector Table Validation
       - name: Check ELF sanity
-        working-directory: /__w/STM32-AWS/STM32-AWS/Initial_project
+        working-directory: ${{ env.PROJECT_PATH }}
         run: |
           ELF=$(ls build/*.elf 2>/dev/null || ls *.elf)
           # Ensure Reset_Handler exists
@@ -133,10 +104,10 @@ jobs:
           name: firmware
           retention-days: 3
           path: |
-            /__w/STM32-AWS/STM32-AWS/Initial_project/build/**/*.elf
-            /__w/STM32-AWS/STM32-AWS/Initial_project/build/**/*.bin
-            /__w/STM32-AWS/STM32-AWS/Initial_project/build/**/*.hex
-            /__w/STM32-AWS/STM32-AWS/Initial_project/build/**/*.map
+            ${{ env.PROJECT_PATH }}/build/**/*.elf
+            ${{ env.PROJECT_PATH }}/build/**/*.bin
+            ${{ env.PROJECT_PATH }}/build/**/*.hex
+            ${{ env.PROJECT_PATH }}/build/**/*.map
 
       - name: Print workflow status
         if: always() && env.DEBUG == 'true'
