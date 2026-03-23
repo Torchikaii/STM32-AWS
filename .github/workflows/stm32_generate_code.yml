@@ -51,7 +51,7 @@ jobs:
       - name: Build firmware
         id: build
         if: steps.generate.outcome == 'success'
-        working-directory: $PROJECT_PATH
+        working-directory: ${{ env.PROJECT_PATH }}
 #        continue-on-error: true
         env:
           MAKEFLAGS: -j$(nproc)
@@ -61,7 +61,7 @@ jobs:
 
       # Check Artifacts Exist
       - name: Check build artifacts
-        working-directory: $PROJECT_PATH
+        working-directory: ${{ env.PROJECT_PATH }}
         run: |
           ls -la build || ls -la .
           ELF=$(ls build/*.elf 2>/dev/null || ls *.elf)
@@ -72,7 +72,7 @@ jobs:
 
       # Enforce Size Budgets (STM32F407: ~1MB Flash, 192KB RAM)
       - name: Enforce size budgets
-        working-directory: $PROJECT_PATH
+        working-directory: ${{ env.PROJECT_PATH }}
         shell: bash
         run: |
           set -euo pipefail
@@ -88,7 +88,7 @@ jobs:
 
       # ELF Sanity Checks & Vector Table Validation
       - name: Check ELF sanity
-        working-directory: $PROJECT_PATH
+        working-directory: ${{ env.PROJECT_PATH }}
         run: |
           ELF=$(ls build/*.elf 2>/dev/null || ls *.elf)
           # Ensure Reset_Handler exists
@@ -104,10 +104,10 @@ jobs:
           name: firmware
           retention-days: 3
           path: |
-            $PROJECT_PATH/build/**/*.elf
-            $PROJECT_PATH/build/**/*.bin
-            $PROJECT_PATH/build/**/*.hex
-            $PROJECT_PATH/build/**/*.map
+            ${{ env.PROJECT_PATH }}/build/**/*.elf
+            ${{ env.PROJECT_PATH }}/build/**/*.bin
+            ${{ env.PROJECT_PATH }}/build/**/*.hex
+            ${{ env.PROJECT_PATH }}/build/**/*.map
 
       - name: Print workflow status
         if: always() && env.DEBUG == 'true'
