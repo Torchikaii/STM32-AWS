@@ -33,50 +33,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      # Create CubeMX Script
       - name: Create generate_script.txt
-        shell: bash
         env:
           ST_CUBE_EMAIL: ${{ secrets.ACCOUNT_EMAIL }}
           ST_CUBE_PASSWORD: ${{ secrets.ACCOUNT_PASSWORD }}
-        run: |
-          IOC_PATH="$(realpath test439/test439.ioc)"
-          PROJECT_PATH="$(realpath test439)"
+        run: ./generate_script.sh
 
-          echo "login \"${ST_CUBE_EMAIL}\" \"${ST_CUBE_PASSWORD}\" y" > generate_script.txt
-          echo "swmgr refresh" >> generate_script.txt
-          echo "swmgr install stm32cube_f4_1.28.2 ask" >> generate_script.txt
-          echo "config load \"$IOC_PATH\"" >> generate_script.txt
-          echo "project toolchain \"Makefile\"" >> generate_script.txt
-          echo "project path \"$PROJECT_PATH\"" >> generate_script.txt
-          echo "project name \"test439\"" >> generate_script.txt
-          echo "project generateunderroot 1" >> generate_script.txt
-          echo "project generate" >> generate_script.txt
-          echo "exit" >> generate_script.txt
-      - run: echo $PWD
-
-      # Login to ST Account & Download STM32F4 firmware package & Load .ioc Configuration & Generate C Code & Makefile
       - name: Run STM32CubeMX
         id: generate
         timeout-minutes: 5
         run: |
-          SCRIPT_PATH="$(realpath "generate_script.txt")"
-          echo "Using SCRIPT_PATH=$SCRIPT_PATH"
-          echo "Using HOME=$HOME"
-          echo "Using PWD=$PWD"
           xvfb-run -a -s "-screen 0 1024x768x24" \
-            /opt/STM32CubeMX/STM32CubeMX -q "$SCRIPT_PATH"
-
-      # Install ARM GCC Toolchain
-      - name: Install ARM GCC toolchain
-        run: |
-          apt-get update
-          apt-get install -y \
-            build-essential \
-            gcc-arm-none-eabi \
-            binutils-arm-none-eabi \
-            libnewlib-arm-none-eabi \
-            make
+            /opt/STM32CubeMX/STM32CubeMX -q "$(realpath generate_script.txt)"
 
       # Compile Firmware & Generate ELF/BIN/HEX & Size Analysis
       - name: Build firmware
