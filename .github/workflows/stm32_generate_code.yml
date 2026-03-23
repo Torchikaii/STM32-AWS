@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEBUG: ${{ github.event.inputs.debug }}
+      PROJECT_PATH: test439
 
     container:
 #      image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
