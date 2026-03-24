@@ -171,7 +171,7 @@ STM32-AWS/
 ├── .github/
 │   └── workflows/
 │       └── stm32_generate_code.yml    # CI/CD pipeline
-├── infrastructure/                     # Terraform IaC
+├── Terraform/                     # Terraform IaC
 │   ├── main.tf
 │   ├── variables.tf
 │   └── modules/
@@ -330,7 +330,6 @@ This structure enables querying to identify which component causes delays - the 
 
 **Deliverables**:
 - [ ] Dockerfile with STM32CubeMX
-- [ ] expect/xdotool script for license automation
 - [ ] GitHub Actions workflow
 - [ ] Test project (STM32F439ZI)
 

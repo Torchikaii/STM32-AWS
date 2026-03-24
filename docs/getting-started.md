@@ -10,8 +10,8 @@ docker build -t stm32-aws/cubemx-runner:dev .
 
 ### 2. Run container from image
 ```bash
-xhost +local:docker
-docker run -it \
+xhost +local:docker && \
+docker run -dit \
   --name cubemx-container \
   -e DISPLAY=$DISPLAY \
   -e ST_CUBE_EMAIL \
@@ -20,16 +20,16 @@ docker run -it \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   -v $XAUTHORITY:$XAUTHORITY \
   -e XAUTHORITY=$XAUTHORITY \
-  -v $(pwd):/github/workspace \
-  stm32-aws/cubemx-runner:dev \
-  bash
+  stm32-aws/cubemx-runner:dev && \
+docker cp $(pwd)/. cubemx-container:/github/workspace && \
+docker exec -it cubemx-container bash
 ```
 
 ### 3. Install vim inside docker container
 
 ```bash
 apt-get update
-apt-get install vim
+apt-get install vim -y
 ```
 
 ### 4. Edit run-cubemx.sh, to run without xvbf 

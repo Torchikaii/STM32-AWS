@@ -4,11 +4,10 @@
 
 ### Completed Tasks
 
-- [ ] phase 1
+- [x] phase 1
 
 ### In Progress
 
-- [ ] phase 1
 
 ### Blockers
 
