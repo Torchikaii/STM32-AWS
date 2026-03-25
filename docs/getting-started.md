@@ -5,7 +5,7 @@
 
 ### 1. Build Docker image
 ```bash
-docker build -t stm32-aws/cubemx-runner:dev .
+docker build --no-cache -t stm32-aws/cubemx-runner:dev .
 ```
 
 ### 2. Run container from image
@@ -32,41 +32,66 @@ apt-get update
 apt-get install vim -y
 ```
 
-### 4. Edit run-cubemx.sh, to run without xvbf 
+### 4. Setup project for CubeMX inside container
+
+run
+```
+/opt/STM32CubeMX/STM32CubeMX
+```
+And follow steps in GUI:
+1. open existing .ioc file located inside
+`/github/workspace/<yourfile>.ioc`
+
+2. Click generate code
+
+3. Wait for it to download, accept all licenses that pop up
+
+4. When prompted to open project, hit `close` and exit program
+
+### 5. Edit run-cubemx.sh, to run without xvfb
 
 Replace
+```bash
 
+CUBEMX_PATH="${CUBEMX_PATH:-$HOME/STM32CubeMX/STM32CubeMX}"
+```
+with
+```bash
+CUBEMX_PATH="${CUBEMX_PATH:-/opt/STM32CubeMX/STM32CubeMX}"
+```
+
+and also replace 
 ```bash
 xvfb-run -a -s "-screen 0 1024x768x24" \
     "$CUBEMX_PATH" -q "$SCRIPT_PATH"
 ```
 
-with 
-```
-$CUBEMX_PATH -q $SCRIPT_PATH
+with
+```bash
+"$CUBEMX_PATH" -q "$SCRIPT_PATH"
 ```
 
-### 5. Inside container - accept license
+### 6. Inside container - accept license
 ```bash
 ./generate_script.sh
 ./run-cubemx.sh
 ```
 Accept the license popup when it appears. Scripts continue after acceptance.
 
-### 6. Exit container and commit changes
+### 7. Exit container and commit changes
 ```bash
 exit
 docker commit cubemx-container stm32-aws/cubemx-runner:dev
 docker rm cubemx-container
 ```
 
-### 7. Tag docker container
+### 8. Tag docker container
 
 ```bash
 docker tag stm32-aws/cubemx-runner:dev ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev
 ```
 
-### 8. Push to GHCR
+### 9. Push to GHCR
 ```bash
 docker push ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev
 ```
