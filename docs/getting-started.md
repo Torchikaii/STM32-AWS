@@ -2,6 +2,20 @@
 
 ## First Time Setup
 
+### 0. Initial stuff
+
+Project may fail on Wayland, for better experience please use X11
+
+```
+git clone https://github.com/Torchikaii/STM32-AWS.git
+```
+
+```
+export ST_CUBE_EMAIL=<your username> \
+export ST_CUBE_PASSWORD=<your password> 
+
+```
+
 
 ### 1. Build Docker image
 ```bash
