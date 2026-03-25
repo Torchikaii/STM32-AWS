@@ -78,20 +78,36 @@ with
 ```
 Accept the license popup when it appears. Scripts continue after acceptance.
 
-### 7. Exit container and commit changes
+### 7. Re-edit run-cubemx.sh again
+
+Replace
+```bash
+"$CUBEMX_PATH" -q "$SCRIPT_PATH"
+```
+
+with
+```bash
+xvfb-run -a -s "-screen 0 1024x768x24" \
+    "$CUBEMX_PATH" -q "$SCRIPT_PATH"
+```
+
+Optionally you can run ./run-cubemx.sh to see that everything
+indeed works silently with no problems.
+
+### 8. Exit container and commit changes
 ```bash
 exit
 docker commit cubemx-container stm32-aws/cubemx-runner:dev
 docker rm cubemx-container
 ```
 
-### 8. Tag docker container
+### 9. Tag docker container
 
 ```bash
 docker tag stm32-aws/cubemx-runner:dev ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev
 ```
 
-### 9. Push to GHCR
+### 10. Push to GHCR
 ```bash
 docker push ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev
 ```
