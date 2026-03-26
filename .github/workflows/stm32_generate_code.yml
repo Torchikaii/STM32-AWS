@@ -23,8 +23,7 @@ jobs:
       PROJECT_PATH: test439
 
     container:
-#      image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:latest
-      image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:dev
+      image: ghcr.io/torchikaii/stm32-aws/cubemx-runner:v0.1.1
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

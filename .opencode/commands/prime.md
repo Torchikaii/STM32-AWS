@@ -25,7 +25,7 @@ You **MUST** read these files in order:
    - `README.md` inside other folders (they likely document
      specific folders)
 
-5. **problems.md**
+5. **.opencode/problems.md**
 
 ### Step 2: Explore Project Structure
 
