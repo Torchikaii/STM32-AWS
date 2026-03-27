@@ -27,7 +27,10 @@ chmod +x SetupSTM32CubeMX-*
 sudo ./SetupSTM32CubeMX-6.15.0 -c --option-file "$CUBEMX_AUTO_XML"
 rm -f stm32cubemx.zip SetupSTM32CubeMX-*
 
+sudo ln -sf /home/pc/repos/STM32-AWS "$CUBEMX_INSTALL_DIR/STM32-AWS"
+
 echo ""
 echo "CubeMX installed to: $CUBEMX_INSTALL_DIR"
+echo "Repo symlinked to:   $CUBEMX_INSTALL_DIR/STM32-AWS"
 echo "setup-repo.sh completed"
 

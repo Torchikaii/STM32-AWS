@@ -1,5 +1,6 @@
-IOC_PATH="$(realpath test439/test439.ioc)"
-PROJECT_PATH="$(realpath test439)"
+REPO_PATH="/opt/STM32CubeMX/STM32-AWS"
+IOC_PATH="$REPO_PATH/test439/test439.ioc"
+PROJECT_PATH="$REPO_PATH/test439"
 
 echo "login \"${ST_CUBE_EMAIL}\" \"${ST_CUBE_PASSWORD}\" y" > generate_script.txt
 echo "swmgr refresh" >> generate_script.txt
