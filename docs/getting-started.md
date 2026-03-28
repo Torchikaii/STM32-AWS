@@ -39,7 +39,7 @@ This will:
 - Install all dependencies
 - Install STM32CubeMX to `~/STM32CubeMX`
 
-### 3. Open project in Cubemx and download pakcages
+### 3. Open project in Cubemx and download packages
 
 This command will launch CubeMX GUI
 ```bash
