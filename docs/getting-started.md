@@ -4,12 +4,25 @@
 
 ### Prerequisites
 
-```bash
-sudo apt update
-sudo apt install -y git
-```
+Software:
+
+- OS: Debian based distro with X11 (preferred)
+(optionally: Wayland, but may break stuff)
+- ST account
+- git
+
+Hardware:
+
+- Computer with internet access and usb.
+- STM32F439ZI 144 pin NUCLEO board
+- USB micro cable with data transfering capabilities.
+
 
 ### 1. Clone repository
+
+Clone repo to the `$HOME` folder's subfolder e.g.
+`~/repos/`
+
 ```bash
 git clone https://github.com/Torchikaii/STM32-AWS.git
 cd STM32-AWS
@@ -28,22 +41,32 @@ This will:
 
 ### 3. Open project in Cubemx and download pakcages
 
-run command below
+This command will launch CubeMX GUI
 ```bash
 $HOME/STM32CubeMX/STM32CubeMX
 ```
-When GUI opens up, then open the existing project (it is inside
-this repo) and click "Generate code". Once prompted for
-credentials, enter your ST-Link credentials and login. Wait
-for all firmware packages to download and accept all license
-pop-ups.
+- When GUI opens up, then open the existing project
+`File -> Load project -> path/to/your-repo/test439/test439.ioc`
+
+- After project opens up, click `Generate code`
+
+- Once prompted for credentials, enter your ST-Link credentials
+and login. Wait for all firmware packages to download and accept
+all license pop-ups.
+
+- Final popup should say "The Code is succesfully generated
+under <path>" Click `Close` and exit CubeMX GUI.
 
 ### 4. Verify setup
+
+Accept license when pops up after running these commands:
 ```bash
 ./generate_script.sh
 ./run-cubemx.sh
+./compile-flash.sh
 ```
 
+Further sections needs verification, don't try them out yet
 ---
 
 ## Docker Setup
