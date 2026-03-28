@@ -1,6 +1,6 @@
-REPO_PATH="/opt/STM32CubeMX/STM32-AWS"
-IOC_PATH="$REPO_PATH/test439/test439.ioc"
-PROJECT_PATH="$REPO_PATH/test439"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+IOC_PATH="$SCRIPT_DIR/test439/test439.ioc"
+PROJECT_PATH="$SCRIPT_DIR/test439"
 
 echo "login \"${ST_CUBE_EMAIL}\" \"${ST_CUBE_PASSWORD}\" y" > generate_script.txt
 echo "swmgr refresh" >> generate_script.txt

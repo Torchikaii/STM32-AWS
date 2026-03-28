@@ -4,7 +4,7 @@
     <com.st.microxplorer.install.MXLicensePanel id="licence.panel"/>
     <com.st.microxplorer.install.MXAnalyticsPanel id="analytics.panel"/>
     <com.st.microxplorer.install.MXTargetPanel id="target.panel">
-        <installpath>/opt/STM32CubeMX</installpath>
+        <installpath>STM32CubeMX</installpath>
     </com.st.microxplorer.install.MXTargetPanel>
     <com.st.microxplorer.install.MXShortcutPanel id="shortcut.panel"/>
     <com.st.microxplorer.install.MXInstallPanel id="install.panel"/>

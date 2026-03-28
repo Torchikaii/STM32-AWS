@@ -24,22 +24,25 @@ export ST_CUBE_PASSWORD=<your_password>
 
 This will:
 - Install all dependencies
-- Install STM32CubeMX to `/opt/STM32CubeMX`
-- Create symlink at `/opt/STM32CubeMX/STM32-AWS` → actual repo location
+- Install STM32CubeMX to `~/STM32CubeMX`
 
-### 3. Accept CubeMX license
+### 3. Open project in Cubemx and download pakcages
+
+run command below
 ```bash
-./generate_script.sh
-/opt/STM32CubeMX/STM32CubeMX -q generate_script.txt
+$HOME/STM32CubeMX/STM32CubeMX
 ```
-Accept any license popups. The script runs silently.
+When GUI opens up, then open the existing project (it is inside
+this repo) and click "Generate code". Once prompted for
+credentials, enter your ST-Link credentials and login. Wait
+for all firmware packages to download and accept all license
+pop-ups.
 
 ### 4. Verify setup
 ```bash
 ./generate_script.sh
 ./run-cubemx.sh
 ```
-Both scripts should complete without errors.
 
 ---
 
@@ -64,7 +67,7 @@ docker run -dit \
   -v $XAUTHORITY:$XAUTHORITY \
   -e XAUTHORITY=$XAUTHORITY \
   stm32-aws/cubemx-runner:dev && \
-docker cp $(pwd)/. cubemx-container:/opt/STM32CubeMX/STM32-AWS && \
+docker cp $(pwd)/. cubemx-container:/root/STM32CubeMX/STM32-AWS && \
 docker exec -it cubemx-container bash
 ```
 
@@ -72,7 +75,7 @@ Inside container:
 ```bash
 ./setup-repo.sh
 ./generate_script.sh
-/opt/STM32CubeMX/STM32CubeMX -q generate_script.txt
+$HOME/STM32CubeMX/STM32CubeMX -q generate_script.txt
 # Accept any license popups, then exit
 exit
 docker commit cubemx-container stm32-aws/cubemx-runner:dev
@@ -101,7 +104,7 @@ docker run -it --rm \
 
 Inside container:
 ```bash
-cd /opt/STM32CubeMX/STM32-AWS
+cd ~/STM32CubeMX/STM32-AWS
 ./generate_script.sh
 ./run-cubemx.sh
 ```
