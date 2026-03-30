@@ -6,7 +6,7 @@
 
 Software:
 
-- OS: Debian based distro with X11 (preferred)
+- OS: Debian-based distro with X11 (preferred)
 (optionally: Wayland, but may break stuff)
 - ST account
 - git
@@ -14,7 +14,7 @@ Software:
 Hardware:
 
 - Computer with internet access and usb.
-- STM32F439ZI 144 pin NUCLEO board
+- STM32F439ZI 144-pin NUCLEO board.
 - USB micro cable with data transfering capabilities.
 
 
@@ -39,30 +39,22 @@ This will:
 - Install all dependencies
 - Install STM32CubeMX to `~/STM32CubeMX`
 
-### 3. Open project in Cubemx and download packages
 
-This command will launch CubeMX GUI
-```bash
-$HOME/STM32CubeMX/STM32CubeMX
-```
-- When GUI opens up, then open the existing project
-`File -> Load project -> path/to/your-repo/test439/test439.ioc`
+### 3. Downlod firmware packages and accept license pop-ups
 
-- After project opens up, click `Generate code`
-
-- Once prompted for credentials, enter your ST-Link credentials
-and login. Wait for all firmware packages to download and accept
-all license pop-ups.
-
-- Final popup should say "The Code is succesfully generated
-under <path>" Click `Close` and exit CubeMX GUI.
-
-### 4. Verify setup
-
-Accept license when pops up after running these commands:
+Run scripts below. This will open CubeMX GUI. When prompted for
+firmware download click `Download`, also accept the license.
 ```bash
 ./generate_script.sh
 ./run-cubemx.sh
+```
+
+### 4. Compile and flash the code to MCU
+
+Connect MCU to your PC (if haven't already) and run command
+below:
+
+```bash
 ./compile-flash.sh
 ```
 
