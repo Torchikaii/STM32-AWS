@@ -7,3 +7,5 @@ test439/Drivers/
 test439/build/
 
 venv
+
+*.swp
