@@ -17,3 +17,27 @@ and succesfully ping it. Complete the steps inside
 4. Add driver. LWIP -> **Platform Settings**
    - set Driver_PHY (IPs or Components) -> LAN8742   
    - set Driver_PHY (Found Solutions) -> LAN8742
+
+
+### 2. Configure the MCU clocks
+
+**Steps in CubeMX**
+1. Open `test439/test439.ioc
+2. Click **Clock configuration** tab
+3. Apply these PLL settings:
+```
+PLL_M = 8
+PLL_N = 336
+PLL_P = 2
+PLL_Q = 7
+```
+After applying PLL settings your clock speeds should be:
+```
+SYSCLK = 168 MHz
+HCLK   = 168 MHz
+APB1   = 42 MHz
+APB2   = 84 MHz
+```
+
+
+

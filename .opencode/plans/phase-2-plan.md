@@ -23,8 +23,8 @@
      - IP Address: `192.168.1.40`
      - Netmask: `255.255.255.0`
      - Gateway: `192.168.1.1`
-4. Verify **RCC > MCO1 Source** = HSE (provides 50MHz to PHY)
-5. **Project Manager** > Generate Code
+ 4. **RMII Clock Configuration** - The LAN8742A PHY provides the 50MHz RMII reference clock to the STM32 via PA8. Configure PA8 as ETH_REF_CLK (input). No MCO1 source configuration needed - the PHY drives the clock.
+   5. **Project Manager** > Generate Code
 
 **Files to modify:**
 - `test439/test439.ioc`
@@ -229,10 +229,9 @@ PING 192.168.1.40 (192.168.1.40) 56(84) bytes of data.
 
 ### Task T1: Verify RMII Clock
 
-**Check:** Oscilloscope on PA8 (MCO1) should show 50MHz square wave.
+**Check:** Oscilloscope on PA8 should show 50MHz square wave (clock coming FROM PHY, not from STM32).
 
-**If missing:**
-- CubeMX > RCC > MCO1 Source = HSE
+**Note:** The LAN8742A PHY generates and outputs the 50MHz clock to PA8. This is the standard robust configuration - the STM32 receives the clock, it does not generate it.
 
 ### Task T2: Check Link Status
 

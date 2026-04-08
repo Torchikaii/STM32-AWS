@@ -103,6 +103,10 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    MX_LWIP_Process();
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
+
+    HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
