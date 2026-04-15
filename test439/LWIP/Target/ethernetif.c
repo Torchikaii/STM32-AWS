@@ -29,6 +29,7 @@
 #include "lwip/ethip6.h"
 #include "ethernetif.h"
 #include "lan8742.h"
+#include "main.h"
 #include <string.h>
 
 /* Within 'USER CODE' section, code will be kept by default at each generation */
@@ -251,6 +252,8 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
   err_t errval = ERR_OK;
   ETH_BufferTypeDef Txbuffer[ETH_TX_DESC_CNT] = {0};
 
+  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7); // DEBUG: LD2 Blue - TX attempt
+
   memset(Txbuffer, 0 , ETH_TX_DESC_CNT*sizeof(ETH_BufferTypeDef));
 
   for(q = p; q != NULL; q = q->next)
@@ -278,7 +281,9 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
   TxConfig.TxBuffer = Txbuffer;
   TxConfig.pData = p;
 
-  HAL_ETH_Transmit(&heth, &TxConfig, ETH_DMA_TRANSMIT_TIMEOUT);
+  if(HAL_ETH_Transmit(&heth, &TxConfig, ETH_DMA_TRANSMIT_TIMEOUT) == HAL_OK) {
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0); // DEBUG: LD1 Green - TX success
+  }
 
   return errval;
 }
@@ -298,6 +303,9 @@ static struct pbuf * low_level_input(struct netif *netif)
   if(RxAllocStatus == RX_ALLOC_OK)
   {
     HAL_ETH_ReadData(&heth, (void **)&p);
+    if(p != NULL) {
+      HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14); // DEBUG: LD3 Red - RX packet
+    }
   }
 
   return p;
