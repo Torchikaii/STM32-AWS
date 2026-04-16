@@ -38,6 +38,36 @@ HCLK   = 168 MHz
 APB1   = 42 MHz
 APB2   = 84 MHz
 ```
+After above steps comeplted,  click "Generate code".
+
+### 3. Call MX_LWIP_Process() in main loop
+
+After generating code in CubeMX, open `Core/Src/main.c` and add the following
+inside the while loop (in the `/* USER CODE BEGIN 3 */` section):
+
+```c
+while (1)
+{
+  /* USER CODE BEGIN 3 */
+  MX_LWIP_Process();
+  /* USER CODE END 3 */
+}
+```
+
+This is required for lwIP to process received packets and handle timeouts.
+
+### 4. Rebuild and flash
+
+```bash
+./compile-flash.sh
+```
+
+### 5. Test connectivity
+
+```bash
+ping 192.168.1.40
+```
+
 
 
 
