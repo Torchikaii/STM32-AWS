@@ -22,6 +22,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "aws_mqtt.h"
+#include "aws_config.h"
+#include <stdio.h>
+#include <string.h>
 
 /* USER CODE END Includes */
 
@@ -44,7 +48,9 @@
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
-
+static aws_mqtt_handle_t mqtt_handle;
+static uint32_t telemetry_counter = 0;
+static char telemetry_payload[128];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -92,7 +98,8 @@ int main(void)
   MX_USART3_UART_Init();
   MX_LWIP_Init();
   /* USER CODE BEGIN 2 */
-
+  memset(&mqtt_handle, 0, sizeof(mqtt_handle));
+  aws_mqtt_connect(&mqtt_handle);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -103,6 +110,15 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     MX_LWIP_Process();
+    
+    if (aws_mqtt_get_state(&mqtt_handle) == AWS_MQTT_STATE_CONNECTED) {
+      telemetry_counter++;
+      snprintf(telemetry_payload, sizeof(telemetry_payload),
+               "{\"device\":\"%s\",\"counter\":%lu,\"status\":\"ok\"}",
+               AWS_DEVICE_ID, (unsigned long)telemetry_counter);
+      aws_mqtt_publish(&mqtt_handle, AWS_IOT_TELEMETRY_TOPIC,
+                       (const uint8_t*)telemetry_payload, strlen(telemetry_payload));
+    }
   }
   /* USER CODE END 3 */
 }
