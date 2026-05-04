@@ -207,8 +207,7 @@ sudo apt install openocd libusb-1.0-0-dev
 # Java (required for STM32CubeMX)
 sudo apt install openjdk-11-jre
 
-# Virtual display for headless CubeMX
-sudo apt install xvfb
+
 ```
 
 ### STM32CubeMX Installation
@@ -228,7 +227,7 @@ chmod +x SetupSTM32CubeMX-*
 
 1. **Generate code** (from project directory):
    ```bash
-   xvfb-run -a STM32CubeMX -i generate_script.txt
+   ./run-cubemx.sh
    ```
 
 2. **Compile**:

@@ -1,0 +1,21 @@
+[submodule "FreeRTOS/libraries/freertos_plus_aws"]
+	path = FreeRTOS/libraries/freertos_plus_aws
+	url = https://github.com/FreeRTOS/FreeRTOS-Libraries
+[submodule "FreeRTOS/coreMQTT"]
+	path = FreeRTOS/coreMQTT
+	url = https://github.com/FreeRTOS/coreMQTT
+[submodule "FreeRTOS/coreMQTT-Agent"]
+	path = FreeRTOS/coreMQTT-Agent
+	url = https://github.com/FreeRTOS/coreMQTT-Agent
+[submodule "FreeRTOS/corePKCS11"]
+	path = FreeRTOS/corePKCS11
+	url = https://github.com/FreeRTOS/corePKCS11
+[submodule "FreeRTOS/coreJSON"]
+	path = FreeRTOS/coreJSON
+	url = https://github.com/FreeRTOS/coreJSON
+[submodule "FreeRTOS/backoffAlgorithm"]
+	path = FreeRTOS/backoffAlgorithm
+	url = https://github.com/FreeRTOS/backoffAlgorithm
+[submodule "FreeRTOS/FreeRTOS"]
+	path = FreeRTOS/FreeRTOS
+	url = https://github.com/FreeRTOS/FreeRTOS

@@ -89,8 +89,9 @@ STM32-AWS/
 - **PRD:** `.opencode/PRD.md` - Product requirements and scope
 - **Problems:** `.opencode/problems.md` - Known issues and challenges
 - **CI/CD:** `.github/workflows/stm32_generate_code.yml` - Main build pipeline
-- **Docker:** `docker/Dockerfile` - Container for STM32CubeMX
-- **Scripts:** `docker/cubemx-runner.sh` - CubeMX wrapper
+- **Docker:** `Dockerfile` - Container for STM32CubeMX
+- **Scripts:** `setup-repo.sh`, `generate_script.sh`, `run-cubemx.sh`, `compile-flash.sh`
+- **Docs:** `docs/getting-started.md`, `docs/network-connection.md`
 
 ---
 

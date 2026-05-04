@@ -180,9 +180,9 @@ STM32-AWS/
 │   ├── mqtt/
 │   └── latency/
 ├── scripts/
-│   └── project-generator/              # TUI for creating new projects
+│   └── project-generator/              # TUI for creating new projects (planned)
 ├── docker/
-│   └── cubemx-runner/                 # Docker image for CI
+│   └── cubemx-runner/                 # Docker image for CI (path: docker/Dockerfile)
 └── docs/
 ```
 
