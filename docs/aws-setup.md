@@ -4,6 +4,51 @@ This guide walks you through manually setting up AWS IoT Core for your STM32 dev
 
 ---
 
+## ⚠️ CRITICAL: Rate Limiting & Cost Control
+
+**AWS IoT Core charges per message.** Without rate limiting, your device could publish millions of times per day, resulting in massive bills.
+
+### Default Rate Limits (Already Configured)
+
+The code includes automatic rate limiting:
+
+```c
+// In aws_config.h
+#define TELEMETRY_PUBLISH_INTERVAL_MS  300000  // 5 minutes between messages
+```
+
+### Cost at Default Settings
+
+| Interval | Messages/Day | Est. Monthly Cost* |
+|----------|-------------|------------------|
+| 5 seconds | 17,280 | ~$50 |
+| 30 seconds | 2,880 | ~$8 |
+| 5 minutes (default) | 288 | ~$1 |
+
+*AWS IoT Core: ~$0.08/million messages (first 250B free)
+
+### ⚠️ NEVER Do This
+
+```c
+// BAD: Uncontrolled loop - WILL cause huge bills!
+while (1) {
+    MQTT_Publish(...);  // No delay = 1M+ messages/day
+}
+```
+
+### ✅ Always Do This
+
+```c
+// GOOD: Rate-limited using vTaskDelayUntil
+TickType_t last_wake = xTaskGetTickCount();
+while (1) {
+    vTaskDelayUntil(&last_wake, pdMS_TO_TICKS(300000));  // 5 min delay
+    MQTT_Publish(...);
+}
+```
+
+---
+
 ## Prerequisites
 
 - AWS Account
@@ -109,6 +154,8 @@ mkdir -p /secrets
 cp device.pem.crt /secrets/device.pem
 cp device.private.key /secrets/device.key
 cp AmazonRootCA1.pem /secrets/
+# IMPORTANT: Restrict permissions on private key
+chmod 600 /secrets/device.key
 ```
 
 ---
@@ -119,7 +166,9 @@ Edit `test439/Inc/aws_config.h`:
 
 ```c
 #define AWS_IOT_ENDPOINT      "xxxxxxxxxxxxx-ats.iot.REGION.amazonaws.com"
-#define AWS_DEVICE_ID         "stm32-device-001"
+#define AWS_DEVICE_ID       "stm32-device-001"
+
+// Rate limiting is automatically applied from TELEMETRY_PUBLISH_INTERVAL_MS
 ```
 
 ---
@@ -148,7 +197,6 @@ Edit `test439/Inc/aws_config.h`:
 ```bash
 aws iot-data publish \
   --topic "device/stm32-device-001/command" \
-  --cli-unix-utc-timestamp-seconds $(date +%s) \
   --payload '{"command": "blink", "led": 1}'
 ```
 
@@ -172,6 +220,12 @@ aws iot-data publish \
 - Verify IAM permissions for IoT actions
 - Check IoT policy Resource ARNs match your region/account
 
+### Massive IoT Bill
+
+- **Most common cause:** No rate limiting in code
+- **Fix:** Ensure `TELEMETRY_PUBLISH_INTERVAL_MS >= 30000`
+- **Check:** Monitor AWS IoT console message count
+
 ---
 
 ## Security Notes
@@ -180,3 +234,4 @@ aws iot-data publish \
 - Store certificates outside the project directory
 - Use file permissions `600` on private keys
 - Consider AWS Secrets Manager for production deployments
+- **Enable AWS IoT Device Defender** to monitor for异常 behavior

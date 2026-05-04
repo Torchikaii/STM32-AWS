@@ -20,14 +20,12 @@
 #include "main.h"
 #include "lwip.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-#include "aws_mqtt.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
 #include "aws_config.h"
 #include <stdio.h>
 #include <string.h>
-
-/* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
@@ -48,16 +46,18 @@
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
-static aws_mqtt_handle_t mqtt_handle;
 static uint32_t telemetry_counter = 0;
 static char telemetry_payload[128];
+static char command_buffer[256];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
-/* USER CODE BEGIN PFP */
+
+extern void vMQTTAgentTask(void *pvParameters);
+extern void vTelemetryTask(void *pvParameters);
 
 /* USER CODE END PFP */
 
@@ -98,29 +98,29 @@ int main(void)
   MX_USART3_UART_Init();
   MX_LWIP_Init();
   /* USER CODE BEGIN 2 */
-  memset(&mqtt_handle, 0, sizeof(mqtt_handle));
-  aws_mqtt_connect(&mqtt_handle);
+
   /* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+  /* Create FreeRTOS tasks -----------------------------------------------*/
+  xTaskCreate(vMQTTAgentTask, "MQTT Agent", 
+              MQTT_AGENT_TASK_STACK_SIZE,
+              NULL,
+              MQTT_AGENT_TASK_PRIORITY,
+              NULL);
+
+  xTaskCreate(vTelemetryTask, "Telemetry",
+              4096,
+              NULL,
+              tskIDLE_PRIORITY + 1,
+              NULL);
+
+  /* Start FreeRTOS scheduler */
+  vTaskStartScheduler();
+
+  /* Should never reach here */
   while (1)
   {
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-    MX_LWIP_Process();
-    
-    if (aws_mqtt_get_state(&mqtt_handle) == AWS_MQTT_STATE_CONNECTED) {
-      telemetry_counter++;
-      snprintf(telemetry_payload, sizeof(telemetry_payload),
-               "{\"device\":\"%s\",\"counter\":%lu,\"status\":\"ok\"}",
-               AWS_DEVICE_ID, (unsigned long)telemetry_counter);
-      aws_mqtt_publish(&mqtt_handle, AWS_IOT_TELEMETRY_TOPIC,
-                       (const uint8_t*)telemetry_payload, strlen(telemetry_payload));
-    }
   }
-  /* USER CODE END 3 */
 }
 
 /**
