@@ -12,11 +12,12 @@
 - Only 1 external library: CoreMQTT
 - No coreJSON — use `strstr(payload, "\"led\":\"on\"")` for parsing
 - No backoffAlgorithm — use `osDelay(2000)` retry loop
-- mbedTLS debug logging enabled (`mbedtls_debug_set_threshold(3)`)
-- Certificates stored as `const` in flash
-- Blocking sockets with timeouts (no non-blocking complexity)
+- mbedTLS debug logging enabled (`MBEDTLS_DEBUG_C` for 3.x or `mbedtls_debug_set_threshold(3)` for 2.x)
+- Certificates as `static const char[]` arrays with `__attribute__((section(".rodata")))` (guaranteed flash, no pointer indirection)
+- Blocking sockets with timeouts (simpler for MVP)
 - LED heartbeat: slow blink = alive, solid = command, fast blink = error/reconnecting
 - Client ID = `stm32-f439-mvp-<mac_suffix>` to avoid collisions
+- Topic = `device/<client_id>/command` (matches dynamic client ID)
 
 ---
 
@@ -28,7 +29,7 @@
 1. Go to AWS Console → IoT Core → Manage → Things → Create thing → Create single thing
 2. Name: `stm32-f439-mvp`
 3. Device certificate → Auto-generate (recommended)
-4. Download all 4 files: certificate PEM, private key PEM, Amazon Root CA 1, RSA 2048-bit key
+4. Download all 3 files: certificate PEM, private key PEM, Amazon Root CA 1
 5. Store in `secrets/` folder
 6. Create IoT Policy:
    - Action: `iot:*`
@@ -132,8 +133,10 @@
    volatile time_t g_unix_epoch;
 
    time_t time(time_t *t) {
-       if (t) *t = g_unix_epoch;
-       return g_unix_epoch;
+       // 32-bit atomic read (aligned on Cortex-M4, naturally atomic)
+       time_t now = g_unix_epoch;
+       if (t) *t = now;
+       return now;
    }
    ```
    mbedTLS will use this automatically.
@@ -144,7 +147,7 @@
 
 **Files to modify:**
 - `test439/Makefile` (add sources)
-- `test439/LWIP/Target/lwipopts.h` (enable SNTP)
+- `test439/LWIP/Target/lwipopts.h` (enable SNTP, or use modern LwIP 2.x `sntp_get_servers()` API)
 - `test439/Core/Src/stm32f4xx_it.c` or main.c (add `time()` override)
 
 **Validation:**
@@ -166,10 +169,10 @@
 1. Add `secrets/` and `test439/Core/Inc/aws_credentials.h` to `.gitignore`
 2. Create `scripts/generate_secrets_header.sh` that:
    - Reads `secrets/device.pem.crt`, `secrets/private.pem.key`, `secrets/AmazonRootCA1.pem`
-   - Outputs `test439/Core/Inc/aws_credentials.h` with PEM content as `const char *` strings in flash
+   - Outputs `test439/Core/Inc/aws_credentials.h` with PEM content as `const char[]` arrays (not pointers) in flash
+   - Example: `static const char device_cert[] __attribute__((section(".rodata"))) = "...";`
    - Each line properly escaped: `"line\n"`
-   - Null-terminated strings
-   - Declared `const` to store in flash, not RAM
+   - Null-terminated arrays (guaranteed flash storage — avoids pointer indirection/relocation)
 3. Add to Makefile: run script as pre-build step
 4. If `secrets/` files missing, print: "Missing AWS certificates. See docs/connecting-to-AWS.md"
 
@@ -183,12 +186,12 @@
 **Validation:**
 - [ ] `secrets/` not tracked by git
 - [ ] `aws_credentials.h` generated before build
-- [ ] Generated header declares `extern const char *` strings (flash-stored)
+- [ ] Generated header declares `static const char[]` arrays (not `const char*` pointers) with `.rodata` attribute
 - [ ] Build fails with clear message if secrets missing
 
 **Estimated complexity:** Low
 
-**Dependencies:** None
+**Dependencies:** Task 1
 
 ---
 
@@ -198,9 +201,8 @@
 
 **Steps:**
 1. Create `test439/Core/Src/mbedtls_transport.c`
-2. Enable mbedTLS debug at init:
+2. Enable mbedTLS debug at init (use `MBEDTLS_DEBUG_C` config for 3.x, or `mbedtls_debug_set_threshold(3)` for 2.x):
    ```c
-   mbedtls_debug_set_threshold(3);
    mbedtls_ssl_conf_dbg(&conf, mbedtls_debug_cb, NULL);
    ```
 3. Configure certificate verification (critical — do NOT skip):
@@ -208,22 +210,38 @@
    mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_REQUIRED);
    mbedtls_ssl_conf_ca_chain(&conf, &cacert, NULL);
    ```
-4. Use **blocking sockets** with timeouts — do NOT use non-blocking mode (avoids `MBEDTLS_ERR_SSL_WANT_READ/WRITE` complexity).
-5. Implement CoreMQTT `TransportInterface_t`:
+4. Check `mbedtls_ssl_setup()` return value — fails on memory/config issues:
+   ```c
+   if (mbedtls_ssl_setup(&ssl, &conf) != 0) {
+       printf("FATAL: mbedtls_ssl_setup failed\n");
+       return -1;
+   }
+   ```
+5. Use **blocking sockets** with timeouts — simpler for MVP. Handle `MBEDTLS_ERR_SSL_WANT_READ/WRITE` in send/recv loops (these occur at TLS record layer when more data needed, not related to socket mode).
+6. Implement CoreMQTT `TransportInterface_t`:
    - `Transport_Connect()` — TCP blocking socket to port 8883 → TLS handshake with SNI
+     - Print: `printf("Connecting to %s:8883\n", endpoint);`
      - **Critical:** `mbedtls_ssl_set_hostname(&ssl, endpoint)` for SNI
+     - After handshake, verify and log result:
+       ```c
+       uint32_t flags = mbedtls_ssl_get_verify_result(&ssl);
+       if (flags != 0) {
+           printf("TLS verify failed: flags=0x%08lx\n", flags);
+       }
+       printf("TLS: %s\n", mbedtls_ssl_get_ciphersuite(&ssl));
+       ```
    - `Transport_Send()` — `mbedtls_ssl_write()` with socket timeout via `SO_SNDTIMEO`
    - `Transport_Recv()` — `mbedtls_ssl_read()` with socket timeout via `SO_RCVTIMEO`
    - `Transport_Disconnect()` — close socket, `mbedtls_ssl_free()`, `mbedtls_net_free()`
-6. Use hardware RNG for entropy: `mbedtls_ctr_drbg_seed()` with `mbedtls_hardware_poll()` via STM32 RNG peripheral
-7. Set socket timeouts: 1-2 seconds on both `SO_RCVTIMEO` and `SO_SNDTIMEO`
-8. On any mbedTLS error, print human-readable message:
+7. Use hardware RNG for entropy: `mbedtls_ctr_drbg_seed()` with `mbedtls_hardware_poll()` via STM32 RNG peripheral
+8. Set socket timeouts: 1-2 seconds on both `SO_RCVTIMEO` and `SO_SNDTIMEO`
+9. On any mbedTLS error, print human-readable message:
    ```c
    char err_buf[128];
    mbedtls_strerror(ret, err_buf, sizeof(err_buf));
    printf("TLS error (%d): %s\n", ret, err_buf);
    ```
-9. Create `test439/Core/Inc/mbedtls_transport.h`
+10. Create `test439/Core/Inc/mbedtls_transport.h`
 
 **Files to create:**
 - `test439/Core/Src/mbedtls_transport.c`
@@ -235,9 +253,13 @@
 **Validation:**
 - [ ] Compiles without errors
 - [ ] Transport functions match CoreMQTT `TransportInterface_t` spec
+- [ ] `mbedtls_ssl_setup()` return value checked
 - [ ] `MBEDTLS_SSL_VERIFY_REQUIRED` set (server cert verified)
+- [ ] `mbedtls_ssl_get_verify_result()` checked after handshake
 - [ ] `mbedtls_ssl_set_hostname()` called for SNI before handshake
-- [ ] Sockets are blocking with timeouts set (no non-blocking mode)
+- [ ] TLS ciphersuite printed after successful handshake
+- [ ] Connect log shows `endpoint:8883`
+- [ ] Sockets are blocking with timeouts set
 
 **Estimated complexity:** High (this is the hardest task)
 
@@ -251,16 +273,17 @@
 
 **Steps:**
 1. Create `test439/Core/Src/tls_smoke_test.c`
-2. Print endpoint: `printf("Endpoint: %s\n", endpoint);`
+2. Print endpoint and connect target: `printf("Connecting to %s:8883\n", endpoint);`
 3. Resolve AWS endpoint via `getaddrinfo()` — print resolved IP: `printf("Resolved IP: %s\n", ip);`
 4. Open TCP socket to resolved IP, port 8883
 5. Perform TLS handshake with mbedTLS (same certs as MQTT will use)
-6. Print result: "TLS handshake OK" or `mbedtls_strerror()` on failure
-7. Retry loop with max attempts:
+6. After handshake, check: `uint32_t flags = mbedtls_ssl_get_verify_result(&ssl);` — print if non-zero
+7. Print result: "TLS handshake OK (ciphersuite: ...)" or `mbedtls_strerror()` on failure
+8. Retry loop with max attempts:
    - If handshake fails, increment `retry_count`, `osDelay(2000)`, retry
    - If `retry_count > 10`, print "FATAL: TLS handshake failed after 10 retries" and halt (bad cert or config)
-8. Block until success — used by MQTT task to ensure connectivity before subscribing
-9. Call once at startup
+9. Block until success — used by MQTT task to ensure connectivity before subscribing
+10. Call once at startup
 
 **Files to create:**
 - `test439/Core/Src/tls_smoke_test.c`
@@ -268,8 +291,9 @@
 
 **Validation:**
 - [ ] Prints endpoint string and resolved IP address
-- [ ] Prints "TLS handshake OK" on serial when endpoint/certs are correct
+- [ ] Prints "TLS handshake OK (ciphersuite: ...)" on serial when endpoint/certs are correct
 - [ ] Prints human-readable TLS error code on failure (not just negative number)
+- [ ] Verification result checked via `mbedtls_ssl_get_verify_result()`
 
 **Estimated complexity:** Medium
 
@@ -295,8 +319,9 @@
      printf("MQTT CONNACK: sessionPresent=%d\n", sessionPresent);
      ```
      If connect fails, print return code and retry.
-   - Print free heap after connect: `printf("Free heap: %u\n", xPortGetFreeHeapSize());`
-   - `MQTT_Subscribe()` to `device/stm32-f439-mvp/command` (QoS 0)
+   - Print free heap after connect: `printf("Free heap: %zu\n", xPortGetFreeHeapSize());`
+   - `MQTT_Subscribe()` to `device/<client_id>/command` (QoS 0)
+     - e.g. `device/stm32-f439-mvp-XXXX/command` — matches generated client ID
    - Loop: call `MQTT_ProcessLoop(..., timeout_ms)` every 250ms (must be < keepalive/2)
      ```c
      for (;;) {
@@ -305,10 +330,21 @@
              printf("MQTT error %d, reconnecting...\n", status);
              goto reconnect;
          }
-         osDelay(10);  // yield to other tasks
+         // MQTT_ProcessLoop(250) already blocks, no extra delay needed
      }
      ```
-   - On disconnect: `osDelay(2000)`, reconnect TLS, reconnect MQTT, resubscribe (set LED to fast blink during reconnect)
+   - On disconnect: full cleanup before reconnect to avoid resource leaks:
+     ```c
+     reconnect:
+     mbedtls_ssl_free(&ssl);
+     mbedtls_ssl_config_free(&conf);
+     mbedtls_x509_crt_free(&cacert);
+     mbedtls_ctr_drbg_free(&ctr_drbg);
+     close(socket_fd);
+     osDelay(2000);
+     // reinitialize all TLS structures, reconnect, resubscribe
+     ```
+     Set LED to fast blink during reconnect.
 4. Subscribe callback:
    - Parse with `strstr(payload, "\"led\":\"on\"")` and `strstr(payload, "\"led\":\"off\"")`
    - `HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET/RESET)`
@@ -336,6 +372,8 @@
 - [ ] Serial output shows: SNTP synced → DNS resolved → TLS OK → MQTT CONNACK logged → Subscribed → Free heap printed
 - [ ] AWS Console Test → subscribe to `$aws/events/#` shows device connection
 - [ ] LED slow blinks when connected, solid on/off with MQTT commands, fast blinks during reconnect
+- [ ] Reconnect works repeatedly (5+ cycles) without memory/resource leaks
+- [ ] `goto reconnect` path fully reinitializes all mbedTLS structs (no stale state)
 
 **Estimated complexity:** High
 
@@ -363,7 +401,7 @@ AWS Console → IoT Core → Manage → Things → Create → Create single thin
 - Device certificate → Auto-generate
 
 ### 2. Download Certificates
-Download all 4 files and place in `secrets/` folder in project root:
+Download all 3 files and place in `secrets/` folder in project root:
 - Device certificate → `secrets/device.pem.crt`
 - Private key → `secrets/private.pem.key`
 - Amazon Root CA 1 → `secrets/AmazonRootCA1.pem`
@@ -406,11 +444,11 @@ make
 
 ### Subscribe in AWS Console
 IoT Core → Test → MQTT test client → Subscribe
-- Topic: `device/stm32-f439-mvp/command`
+- Topic: `device/stm32-f439-mvp-XXXX/command` (replace XXXX with MAC suffix)
 
 ### Publish to control LED
 IoT Core → Test → MQTT test client → Publish
-- Topic: `device/stm32-f439-mvp/command`
+- Topic: `device/stm32-f439-mvp-XXXX/command` (replace XXXX with MAC suffix)
 - Payload: `{"led":"on"}` or `{"led":"off"}`
 ```
 
