@@ -495,73 +495,18 @@
 **Files to create:**
 - `docs/connecting-to-AWS.md`
 
-**Exact content structure:**
-
-```markdown
-# Connecting to AWS IoT
-
-## One-time Setup
-
-### 1. Create IoT Thing
-AWS Console → IoT Core → Manage → Things → Create → Create single thing
-- Name: `stm32-f439-mvp`
-- Device certificate → Auto-generate
-
-### 2. Download Certificates
-Download all 3 files and place in `secrets/` folder in project root:
-- Device certificate → `secrets/device.pem.crt`
-- Private key → `secrets/private.pem.key`
-- Amazon Root CA 1 → `secrets/AmazonRootCA1.pem`
-
-### 3. Create IoT Policy
-AWS Console → IoT Core → Security → Policies → Create
-- Action: `iot:*`
-- Resource ARN: `*`
-- Name: `stm32-f439-mvp-policy`
-
-### 4. Attach Policy & Activate
-- Attach policy to certificate
-- Activate certificate
-
-### 5. Note Your Endpoint
-Settings → Custom endpoint → Copy: `xxxxxxxxxx-ats.iot.region.amazonaws.com`
-Update in `test439/Core/Inc/aws_iot_config.h`
-
----
-
-## Build
-
-### Place certificates
-Put all 3 PEM files in `secrets/` folder.
-
-### Build firmware
-```bash
-cd test439
-make
-```
-
-### Flash
-```bash
-./compile-flash.sh
-```
-
----
-
-## Test
-
-### Subscribe in AWS Console
-IoT Core → Test → MQTT test client → Subscribe
-- Topic: `device/stm32-f439-mvp-XXXX/command` (replace XXXX with MAC suffix)
-
-### Publish to control LED
-IoT Core → Test → MQTT test client → Publish
-- Topic: `device/stm32-f439-mvp-XXXX/command` (replace XXXX with MAC suffix)
-- Payload: `{"led":"on"}` or `{"led":"off"}` (exact format, no spaces)
-```
+**General rules for content:**
+- Follow `docs/getting-started.md` structure and formatting exactly
+- Include only reproducible steps: CubeMX config, AWS setup, cert placement, build, test
+- Use concise imperative language ("click", "run", "place", "open")
+- Omit explanations, descriptions, architecture rationale, and code snippets not meant for copy-paste
+- Use `---` section separators and fenced code blocks for commands
+- Validation: A developer can follow the doc end-to-end without needing to read the plan
 
 **Validation:**
-- [ ] Doc follows same format as `docs/getting-started.md` (sections, minimal text, code blocks)
-- [ ] Someone following the doc can replicate the setup without guessing
+- [ ] Doc follows same format as `docs/getting-started.md`
+- [ ] All reproducible steps included (CubeMX, AWS, Build, Test)
+- [ ] No explanatory text or design descriptions
 
 **Estimated complexity:** Low
 
