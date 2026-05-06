@@ -502,6 +502,7 @@
 - Omit explanations, descriptions, architecture rationale, and code snippets not meant for copy-paste
 - Use `---` section separators and fenced code blocks for commands
 - Validation: A developer can follow the doc end-to-end without needing to read the plan
+- **Note:** `LWIP_DNS` and `LWIP_SNTP` are NOT available in CubeMX GUI — instruct users to add them manually to `lwipopts.h` inside `USER CODE BEGIN 1` section
 
 **Validation:**
 - [ ] Doc follows same format as `docs/getting-started.md`
