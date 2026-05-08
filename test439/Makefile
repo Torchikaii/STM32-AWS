@@ -60,30 +60,6 @@ Core/Src/syscalls.c \
 LWIP/App/lwip.c \
 LWIP/Target/ethernetif.c \
 Drivers/BSP/Components/lan8742/lan8742.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/auth.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/ccp.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/chap_ms.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/chap-md5.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/chap-new.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/demand.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/eap.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/eui64.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/fsm.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/ipcp.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/ipv6cp.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/lcp.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/magic.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/mppe.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/multilink.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/ppp.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/pppapi.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/pppcrypt.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/pppoe.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/pppol2tp.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/pppos.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/upap.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/utils.c \
-Middlewares/Third_Party/LwIP/src/netif/ppp/vj.c \
 Middlewares/Third_Party/LwIP/src/netif/bridgeif.c \
 Middlewares/Third_Party/LwIP/src/netif/bridgeif_fdb.c \
 Middlewares/Third_Party/LwIP/src/netif/ethernet.c \
@@ -255,7 +231,7 @@ AS_DEFS =
 C_DEFS =  \
 -DUSE_HAL_DRIVER \
 -DSTM32F439xx \
--DMBEDTLS_CONFIG_FILE=<mbedtls_config.h>
+-DMBEDTLS_CONFIG_FILE=\"mbedtls_config.h\"
 
 
 # AS includes
@@ -367,5 +343,12 @@ clean:
 # dependencies
 #######################################
 -include $(wildcard $(BUILD_DIR)/*.d)
+
+# Pre-build: generate aws_credentials.h from ~/.secrets/ PEM files
+Core/Inc/aws_credentials.h:
+	../scripts/generate_secrets_header.sh
+
+# Make all target depend on credentials header + firmware
+all: Core/Inc/aws_credentials.h $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
 
 # *** EOF ***
