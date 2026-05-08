@@ -30,7 +30,7 @@
 2. Name: `stm32-f439-mvp`
 3. Device certificate → Auto-generate (recommended)
 4. Download all 3 files: certificate PEM, private key PEM, Amazon Root CA 1
-5. Store in `secrets/` folder
+5. Store outside the repo (e.g. `~/.secrets/`)
 6. Create IoT Policy:
    - Action: `iot:*`
    - Resource ARN: `*` (permissive for MVP, tighten later)
@@ -39,14 +39,14 @@
 9. Note AWS IoT endpoint: Settings → Custom endpoint (format: `xxxxxxxxxx-ats.iot.region.amazonaws.com`)
 
 **Files to create:**
-- `secrets/device.pem.crt`
-- `secrets/private.pem.key`
-- `secrets/AmazonRootCA1.pem`
+- `~/.secrets/device.pem.crt`
+- `~/.secrets/private.pem.key`
+- `~/.secrets/AmazonRootCA1.pem`
 
 **Validation:**
 - [ ] Certificate status is "ACTIVE" in AWS Console
 - [ ] Policy attached to certificate
-- [ ] `secrets/` is in `.gitignore`
+- [ ] Secrets directory is outside the repo (e.g. `~/.secrets/`)
 
 **Estimated complexity:** Low
 
@@ -189,20 +189,20 @@
 
 ---
 
-## Task 5: Secrets Build Integration & .gitignore
+## Task 5: Secrets Build Integration
 
 **Description:** Automate converting PEM files to C header at build time, ensure secrets stay out of git.
 
 **Steps:**
-1. Add `secrets/` and `test439/Core/Inc/aws_credentials.h` to `.gitignore`
+1. Add `test439/Core/Inc/aws_credentials.h` to `.gitignore`
 2. Create `scripts/generate_secrets_header.sh` that:
-   - Reads `secrets/device.pem.crt`, `secrets/private.pem.key`, `secrets/AmazonRootCA1.pem`
+   - Reads `~/.secrets/device.pem.crt`, `~/.secrets/private.pem.key`, `~/.secrets/AmazonRootCA1.pem`
    - Outputs `test439/Core/Inc/aws_credentials.h` with PEM content as `const char[]` arrays (not pointers) in flash
    - Example: `static const char device_cert[] __attribute__((section(".rodata"))) = "...";`
    - Each line properly escaped: `"line\n"`
    - Null-terminated arrays (guaranteed flash storage — avoids pointer indirection/relocation)
 3. Add to Makefile: run script as pre-build step
-4. If `secrets/` files missing, print: "Missing AWS certificates. See docs/connecting-to-AWS.md"
+4. If secrets files missing, print: "Missing AWS certificates. See docs/connecting-to-AWS.md"
 
 **Files to create:**
 - `scripts/generate_secrets_header.sh`
@@ -212,7 +212,7 @@
 - `test439/Makefile` (pre-build hook)
 
 **Validation:**
-- [ ] `secrets/` not tracked by git
+- [ ] Secrets directory is outside the repo (e.g. `~/.secrets/`)
 - [ ] `aws_credentials.h` generated before build
 - [ ] Generated header declares `static const char[]` arrays (not `const char*` pointers) with `.rodata` attribute
 - [ ] Build fails with clear message if secrets missing

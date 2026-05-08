@@ -48,7 +48,7 @@ AWS Console → IoT Core → Manage → Things → Create → Create single thin
 - Device certificate → Auto-generate
 
 ### 2. Download Certificates
-Place in `secrets/` folder at project root:
+Place in `.secrets/` folder inside `~` directory:
 - `device.pem.crt`
 - `private.pem.key`
 - `public.pem.key`
@@ -65,8 +65,18 @@ AWS Console → IoT Core → Security → Policies → Create
 - Activate certificate
 
 ### 5. Set Endpoint
-AWS Console → IoT Core → Settings → Custom endpoint → Copy
-Update `AWS_IOT_ENDPOINT` in `test439/Core/Inc/aws_iot_config.h`
+AWS Console → IoT Core → Connect → Domain configurations → Domain name
+
+Create `test439/Core/Inc/aws_iot_config.h` with your endpoint:
+
+```c
+#ifndef AWS_IOT_CONFIG_H
+#define AWS_IOT_CONFIG_H
+
+#define AWS_IOT_ENDPOINT "your-endpoint.iot.us-east-1.amazonaws.com"
+
+#endif
+```
 
 ---
 
