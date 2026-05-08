@@ -272,12 +272,12 @@
 - `infrastructure/scripts/send-command.sh`
 - `infrastructure/scripts/mqtt-relay.service`
 
-**Validation:**
-- [ ] MQTT relay connects to IoT Core and subscribes to topics
-- [ ] MCU telemetry/response messages appear in PostgreSQL telemetry table
-- [ ] `send-command.sh stm32-f439-mvp-A1B2 '{"led":"on"}'` publishes to correct topic
-- [ ] MCU receives command and toggles LED
-- [ ] Script reconnects on network disruption
+**Validation (no MCU needed):**
+- [ ] MQTT relay connects to IoT Core and subscribes to topics (check EC2 logs)
+- [ ] Publish a fake telemetry message from AWS Console → MQTT test client to `device/stm32-f439-mvp-A1B2/telemetry` → verify row appears in PostgreSQL
+- [ ] `send-command.sh stm32-f439-mvp-A1B2 '{"led":"on"}'` publishes to correct topic (verify by subscribing to `device/+/command` in MQTT test client)
+- [ ] Script reconnects on network disruption (restart service, check logs)
+- [ ] All testing doable via AWS Console MQTT test client — no physical MCU required
 
 **Estimated complexity:** High
 
