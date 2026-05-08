@@ -51,6 +51,7 @@ AWS Console → IoT Core → Manage → Things → Create → Create single thin
 Place in `secrets/` folder at project root:
 - `device.pem.crt`
 - `private.pem.key`
+- `public.pem.key`
 - `AmazonRootCA1.pem`
 
 ### 3. Create Policy

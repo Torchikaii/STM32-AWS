@@ -8,4 +8,6 @@ test439/build/
 
 venv
 
+secrets
+
 *.swp

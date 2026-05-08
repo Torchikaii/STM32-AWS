@@ -26,7 +26,7 @@
 **Description:** Create AWS IoT thing, generate certificates, create policy, attach and activate.
 
 **Steps:**
-1. Go to AWS Console → IoT Core → Manage → Things → Create thing → Create single thing
+1. Go to AWS Console → IoT Core → Manage → All Devices → Things → Create things → Create single thing
 2. Name: `stm32-f439-mvp`
 3. Device certificate → Auto-generate (recommended)
 4. Download all 3 files: certificate PEM, private key PEM, Amazon Root CA 1
