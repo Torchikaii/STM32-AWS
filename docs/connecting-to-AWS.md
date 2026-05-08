@@ -92,6 +92,39 @@ Place the 3 required files in `~/.secrets/` and rename them as follows:
 
 > `AmazonRootCA3.pem` and `public.pem.key` are also downloaded but not needed for the device.
 
+---
+
+## CoreMQTT Library
+
+This project uses [CoreMQTT](https://github.com/FreeRTOS/coreMQTT) (from the FreeRTOS team) instead of LwIP's built-in MQTT client. Add it as a git submodule:
+
+```bash
+git submodule add https://github.com/FreeRTOS/coreMQTT.git libs/coreMQTT
+```
+
+This creates `libs/coreMQTT/` with the MQTT source files and a `.gitmodules` entry pinning the version. Anyone cloning the repo should use `git clone --recursive` or run `git submodule update --init` after clone.
+
+> **Note:** If you already cloned the repo without `--recursive`, run `git submodule update --init` to fetch all submodules.
+
+Create `test439/Core/Inc/core_mqtt_config.h`:
+
+```c
+#ifndef CORE_MQTT_CONFIG_H
+#define CORE_MQTT_CONFIG_H
+
+#include <stdio.h>
+
+#define MQTT_STATE_ARRAY_SIZE            128
+#define MQTT_MAX_CONCURRENT_OPERATIONS   1
+
+#define LogError( x )  printf x
+#define LogWarn( x )   printf x
+#define LogInfo( x )   printf x
+#define LogDebug( x )
+
+#endif
+```
+
 ### 3. Create Policy
 AWS Console → IoT Core → Security → Policies → Create
 - Action: `iot:*`

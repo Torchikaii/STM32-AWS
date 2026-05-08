@@ -117,6 +117,8 @@ Middlewares/Third_Party/LwIP/src/core/ipv6/ethip6.c \
 Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c \
 Core/Src/freertos.c \
 Core/Src/stm32f4xx_hal_timebase_tim.c \
+../libs/coreMQTT/source/core_mqtt.c \
+../libs/coreMQTT/source/core_mqtt_state.c \
 MBEDTLS/App/mbedtls.c \
 MBEDTLS/App/net_sockets.c \
 MBEDTLS/Target/hardware_rng.c \
@@ -266,7 +268,11 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 -IMiddlewares/Third_Party/mbedTLS/include/mbedtls \
--IMiddlewares/Third_Party/mbedTLS/include
+-IMiddlewares/Third_Party/mbedTLS/include \
+-ILwIP/App \
+-ILwIP/Target \
+-I../libs/coreMQTT/source/include \
+-I../libs/coreMQTT/source/interface
 
 
 # compile gcc flags
