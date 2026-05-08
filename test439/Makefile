@@ -116,6 +116,7 @@ Middlewares/Third_Party/LwIP/src/core/ipv6/icmp6.c \
 Middlewares/Third_Party/LwIP/src/core/ipv6/ethip6.c \
 Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c \
 Core/Src/freertos.c \
+Core/Src/sntp_task.c \
 Core/Src/stm32f4xx_hal_timebase_tim.c \
 ../libs/coreMQTT/source/core_mqtt.c \
 ../libs/coreMQTT/source/core_mqtt_state.c \
