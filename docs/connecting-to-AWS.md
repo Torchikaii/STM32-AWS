@@ -40,6 +40,38 @@ Open `test439/LWIP/Target/lwipopts.h`, add inside `/* USER CODE BEGIN 1 */`:
 
 These defines survive code regeneration.
 
+### Post-generation: main.c
+
+CubeMX generates `MX_LWIP_Process()` inside `main.c`'s while loop. This is for bare-metal mode. Since we use FreeRTOS, LwIP runs in its own `tcpip_thread` — replace it with `osDelay(100)`:
+
+Open `test439/Core/Src/main.c`, find the while loop inside `/* USER CODE BEGIN WHILE */` and change:
+
+```c
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
+    MX_LWIP_Process();       // ← remove this line
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+```
+
+to:
+
+```c
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
+    osDelay(100);            // ← add this instead
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+```
+
+This change is inside `USER CODE` sections and survives re-generation.
+
 ## AWS IoT Setup
 
 ### 1. Create Thing
@@ -48,11 +80,17 @@ AWS Console → IoT Core → Manage → Things → Create → Create single thin
 - Device certificate → Auto-generate
 
 ### 2. Download Certificates
-Place in `.secrets/` folder inside `~` directory:
-- `device.pem.crt`
-- `private.pem.key`
-- `public.pem.key`
-- `AmazonRootCA1.pem`
+AWS Console → Thing → Security → click on certificate → Download
+
+Place the 3 required files in `~/.secrets/` and rename them as follows:
+
+| Original (AWS Console) | Rename to |
+|------------------------|-----------|
+| `xxx-certificate.pem.crt` | `stm32-aws-certificate.pem.crt` |
+| `xxx-private.pem.key` | `stm32-aws-private.pem.key` |
+| `AmazonRootCA1.pem` | `AmazonRootCA1.pem` (keep as-is) |
+
+> `AmazonRootCA3.pem` and `public.pem.key` are also downloaded but not needed for the device.
 
 ### 3. Create Policy
 AWS Console → IoT Core → Security → Policies → Create
@@ -80,11 +118,32 @@ Create `test439/Core/Inc/aws_iot_config.h` with your endpoint:
 
 ---
 
-## Build
+### 6. Secrets Build Integration
+
+The PEM certificates must be embedded into the firmware binary. A script converts them to C arrays at build time.
 
 ```bash
-cd test439
-make
+# Ensure the script is executable
+chmod +x scripts/generate_secrets_header.sh
+```
+
+The Makefile in `test439/` runs this script automatically before each build. It reads from `~/.secrets/` and generates `Core/Inc/aws_credentials.h`.
+
+**If secrets are missing**, the build will fail with:
+```
+ERROR: Missing ~/.secrets/stm32-aws-certificate.pem.crt
+See docs/connecting-to-AWS.md for setup instructions.
+```
+
+The generated `aws_credentials.h` is gitignored — certificates never enter the repository.
+
+---
+
+## Build
+
+The project uses FreeRTOS — LwIP runs in its own thread (`tcpip_thread`). No manual polling needed.
+
+```bash
 ./compile-flash.sh
 ```
 
