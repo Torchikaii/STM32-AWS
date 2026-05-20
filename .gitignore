@@ -6,6 +6,9 @@ generate_script.txt
 test439/Drivers/
 test439/build/
 test439/Core/Inc/aws_credentials.h
+test439/Src/
+test439/Inc/
+test439/Untitled/
 
 venv
 

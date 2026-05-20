@@ -23,7 +23,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include "lwip.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -78,7 +79,11 @@ void Start_AWS_IoT_Task(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+int __io_putchar(int ch)
+{
+  HAL_UART_Transmit(&huart3, (uint8_t *)&ch, 1, 100);
+  return ch;
+}
 /* USER CODE END 0 */
 
 /**
@@ -115,14 +120,19 @@ int main(void)
   /* Call PreOsInit function */
   MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
-
+  printf("[BOOT] Starting...\n");
   /* USER CODE END 2 */
 
   /* Init scheduler */
+  printf("[DIAG] Before osKernelInitialize tick=%lu\n", HAL_GetTick());
   osKernelInitialize();
+  printf("[DIAG] After osKernelInitialize tick=%lu\n", HAL_GetTick());
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
+  printf("[DIAG] Before MX_LWIP_Init tick=%lu\n", HAL_GetTick());
+  MX_LWIP_Init();
+  printf("[DIAG] After MX_LWIP_Init tick=%lu\n", HAL_GetTick());
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -331,7 +341,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
+{
+  printf("STACK OVERFLOW: %s\n", pcTaskName);
+  while (1);
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */

@@ -512,3 +512,199 @@
 **Estimated complexity:** Low
 
 **Dependencies:** Tasks 1-8 completed
+
+---
+
+## Appendix: Ethernet Connectivity Troubleshooting
+
+### 0. ETH Connectivity Comes First
+
+Do **NOT** attempt any AWS/MQTT/TLS work until `ping 192.168.1.40` succeeds. The entire Phase 3 depends on a working network stack. The most common failure mode is the lwIP + FreeRTOS architecture being in a broken hybrid state (polling remnants combined with RTOS mode).
+
+### 1. Architecture Confirmation — Keyword Checklist
+
+When moving from bare-metal (Phase 2 style: `NO_SYS=1`, polling) to RTOS mode, these keywords **must** be present in your generated files. Scan for them.
+
+#### In `lwipopts.h`
+| Keyword | Required | Meaning |
+|---------|----------|---------|
+| `#define NO_SYS 0` | YES | RTOS mode on. Must be **explicit** — do not rely on lwIP `opt.h` default. |
+| `#define WITH_RTOS 1` | YES | CubeMX meta-switch for RTOS glue code. |
+| `#define LWIP_NETIF_LINK_CALLBACK 1` | YES | Link status callback (required for `ethernet_link_thread`). |
+| `#define CHECKSUM_BY_HARDWARE 1` | YES | Offload checksum to ETH peripheral. |
+
+#### In `lwip.c` (`LWIP/App/lwip.c`)
+| Code | Purpose |
+|------|---------|
+| `tcpip_init(NULL, NULL);` | Starts RTOS tcpip_thread. If missing, lwIP core never runs. |
+| `netif_add(..., tcpip_input)` | The `tcpip_input` function pointer means incoming packets go through RTOS mailbox, not direct polling. |
+| `osThreadNew(ethernet_link_thread, ...)` | Creates the link-monitoring thread. If missing, link changes not detected. |
+| **No** `MX_LWIP_Process()` | If present anywhere, the architecture is still in polling mode. |
+
+#### In `ethernetif.c` (`LWIP/Target/ethernetif.c`)
+| Code | Purpose |
+|------|---------|
+| `osSemaphoreNew(...)` | Semaphores for RX/TX signaling. If absent, falling back to polling. |
+| `osThreadNew(ethernetif_input, ...)` | RX processing thread. This replaces `MX_LWIP_Process()`. |
+| `HAL_ETH_Start_IT(&heth)` | Enables interrupt-driven RX/TX (not polling). |
+| `RxPktSemaphore` used in `HAL_ETH_RxCpltCallback` | ISR-to-task signaling path. |
+
+#### In `stm32f4xx_it.c`
+| Code | Purpose |
+|------|---------|
+| `void ETH_IRQHandler(void) { HAL_ETH_IRQHandler(&heth); }` | ETH interrupt handler. If missing, packets never arrive. |
+
+#### In `HAL_ETH_MspInit()` (inside `ethernetif.c`)
+| Code | Purpose |
+|------|---------|
+| `HAL_NVIC_SetPriority(ETH_IRQn, 5, 0);` | Must be >= `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` (5). |
+| `HAL_NVIC_EnableIRQ(ETH_IRQn);` | Must be called to unmask ETH interrupt in NVIC. |
+
+#### In `main.c` — Startup Order
+Correct:
+```c
+osKernelInitialize();   // Must come FIRST
+MX_LWIP_Init();         // Must come AFTER (tcpip_init creates RTOS objects)
+osKernelStart();        // Finally start the scheduler
+```
+Wrong:
+```c
+MX_LWIP_Init();         // WRONG: kernel not initialized yet
+osKernelInitialize();   // Kernel init after lwIP uses RTOS APIs = crash/hang
+```
+
+#### In `test439.ioc` — CubeMX Settings to Confirm
+| Setting | Path | Expected Value |
+|---------|------|----------------|
+| FreeRTOS Interface | `FREERTOS` → Interface | `CMSIS_V2` |
+| LwIP Mode | `LWIP` → General → RTOS mode | Enabled / NO_SYS Disabled |
+| HAL Timebase | `SYS` → Timebase Source | `TIM1` or `TIM6` or `TIM7` (**NOT** SysTick) |
+| ETH Interrupt | `NVIC` → ETH global interrupt | Enabled (checkbox checked) |
+| RNG | `RNG` → Mode | Activated (mbedTLS entropy source) |
+
+### 2. Stack Overflow — The Most Common Killer
+
+When Ethernet worked under bare-metal (polling) but fails under FreeRTOS, **stack overflow is the #1 cause**. RTOS threads have fixed-size stacks; bare-metal had the entire main stack.
+
+#### Known Dangerous Value
+**`INTERFACE_THREAD_STACK_SIZE`** in `ethernetif.c`:
+```c
+#define INTERFACE_THREAD_STACK_SIZE ( 350 )   // ← DANGEROUSLY SMALL
+```
+This thread (`EthIf`) processes every incoming packet. Its call chain:
+```
+ethernetif_input() → low_level_input() → HAL_ETH_ReadData()
+→ netif->input() (tcpip_input)
+```
+Estimated peak stack usage: **280–424 bytes**. With 350 bytes available, overflow is inevitable.
+
+**Fix:** Increase to at least **1024** bytes:
+```c
+#define INTERFACE_THREAD_STACK_SIZE ( 1024 )
+```
+
+#### Other Stack Sizes to Check
+| Thread | File | Current (bytes) | Recommended |
+|--------|------|-----------------|-------------|
+| `EthIf` (RX processing) | `ethernetif.c` | 350 | **1024–2048** |
+| `tcpip_thread` (lwIP core) | `lwipopts.h` (`TCPIP_THREAD_STACKSIZE`) | 1024 | 2048 (safer with mbedTLS) |
+| `EthLink` (link monitor) | `lwip.c` | 1024 | 1024 (OK) |
+| `defaultTask` | `main.c` | 512 | 512 (OK for stub) |
+| `AWS_IoT_Task` | `main.c` | 12288 | Large enough for TLS/MQTT |
+
+#### Enable Stack Overflow Detection
+In `FreeRTOSConfig.h`, add:
+```c
+#define configCHECK_FOR_STACK_OVERFLOW 2
+```
+Then define the hook:
+```c
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
+    printf("STACK OVERFLOW: %s\n", pcTaskName);
+    while (1);  // halt
+}
+```
+This catches overflows immediately instead of silently corrupting memory.
+
+### 3. Memory Shortages
+
+#### FreeRTOS Heap (`configTOTAL_HEAP_SIZE`)
+- **Current:** 32768 bytes (32 KB)
+- **Adequate for:** lwIP + basic ping
+- **Tight for:** lwIP + mbedTLS + CoreMQTT + SNTP together
+- **Check free heap at runtime:**
+  ```c
+  printf("Free heap: %u\n", xPortGetFreeHeapSize());
+  ```
+- If free heap drops below ~4 KB during normal operation, increase to 48 KB or 64 KB in `.ioc` → FREERTOS → `configTOTAL_HEAP_SIZE`.
+
+#### lwIP Memory Pools (`lwipopts.h`)
+| Parameter | Current | Recommended | Notes |
+|-----------|---------|-------------|-------|
+| `MEM_SIZE` | 16384 | 16384–32768 | Heap memory for lwIP (pbufs, headers, etc.) |
+| `TCP_MSS` | 1460 | 1460 | Max segment size (standard for Ethernet) |
+| `TCP_SND_BUF` | 5840 | 4×TCP_MSS = 5840 | Send buffer per TCP connection |
+| `TCP_WND` | (not set) | 4×TCP_MSS = 5840 | Receive window |
+| `PBUF_POOL_SIZE` | (not set) | 16–24 | PBUF pool buffers for RX |
+| `MEMP_NUM_TCP_SEG` | 24 | 24–32 | TCP segments in memory |
+
+If you see `ERR_MEM` in lwIP debug output, increase `MEM_SIZE` and `PBUF_POOL_SIZE`.
+
+### 4. HAL Timebase — SysTick vs TIM
+
+**Critical:** When FreeRTOS is enabled, `SYS` timebase **must not** use SysTick (FreeRTOS owns SysTick for its tick interrupt).
+
+In `.ioc`:
+```
+System Core → SYS → Timebase Source → TIM1 (or TIM6/TIM7)
+```
+
+If SysTick is used for HAL, both FreeRTOS and HAL fight over the SysTick interrupt, causing erratic timing, missed ticks, and network timeouts.
+
+**In generated code:** `stm32f4xx_hal_timebase_tim.c` should exist (TIM-based HAL timebase).
+
+### 5. PHY Diagnostics
+
+Add debug output at each stage to identify where initialization fails:
+
+```c
+// After HAL_ETH_Init — in low_level_init():
+printf("HAL_ETH_Init status: %d\n", hal_eth_init_status);
+
+// After PHY init — in low_level_init():
+int32_t phy_status = LAN8742_Init(&LAN8742);
+printf("LAN8742_Init status: %d\n", phy_status);
+
+// After HAL_ETH_Start_IT
+printf("HAL_ETH_Start_IT called\n");
+
+// Link status — in ethernet_link_thread():
+uint32_t regval = 0;
+HAL_ETH_ReadPHYRegister(&heth, 0, 0x01, &regval);
+printf("PHY BSR: 0x%04lx\n", regval);  // Bit 2 = link up
+```
+
+PHY Register 0x01 (Basic Status Register) bits:
+- Bit 2: Link Status (1 = up)
+- Bit 5: Auto-negotiation complete
+
+### 6. Pre-Flight Checklist
+
+If ping still fails, verify one more time:
+
+- [ ] USB/Serial cable connected (to see UART debug output)
+- [ ] Ethernet cable plugged in (link LED on both ends)
+- [ ] PC on same subnet (`192.168.1.x/24`)
+- [ ] `#define NO_SYS 0` in `lwipopts.h` (explicit)
+- [ ] `ETH_IRQHandler` exists in `stm32f4xx_it.c`
+- [ ] `HAL_NVIC_EnableIRQ(ETH_IRQn)` called in `HAL_ETH_MspInit()`
+- [ ] `ETH_IRQn` priority = 5 (not 0, not 15)
+- [ ] `osKernelInitialize()` before `MX_LWIP_Init()`
+- [ ] `INTERFACE_THREAD_STACK_SIZE` ≥ 1024
+- [ ] `configCHECK_FOR_STACK_OVERFLOW` enabled (set to 2)
+- [ ] HAL timebase is TIM, not SysTick
+- [ ] `configTOTAL_HEAP_SIZE` ≥ 32768
+- [ ] PHY address matches hardware
+- [ ] No `MX_LWIP_Process()` anywhere in the codebase
+- [ ] `tcpip_init(NULL, NULL)` called inside `MX_LWIP_Init()`
+- [ ] Build is clean (no link errors, no undefined symbols)

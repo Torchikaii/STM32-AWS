@@ -43,7 +43,7 @@
 #define ETHIF_TX_TIMEOUT (2000U)
 /* USER CODE BEGIN OS_THREAD_STACK_SIZE_WITH_RTOS */
 /* Stack size of the interface thread */
-#define INTERFACE_THREAD_STACK_SIZE ( 350 )
+#define INTERFACE_THREAD_STACK_SIZE ( 1024 )
 /* USER CODE END OS_THREAD_STACK_SIZE_WITH_RTOS */
 /* Network interface name */
 #define IFNAME0 's'
@@ -209,7 +209,11 @@ static void low_level_init(struct netif *netif)
 
   /* USER CODE END MACADDRESS */
 
+  printf("DIAG_ETH: before HAL_ETH_Init tick=%lu\n", HAL_GetTick());
+  __HAL_RCC_ETH_CLK_ENABLE();
+  printf("DIAG_ETH: ETH clock enabled, DMABMR=0x%08lx\n", ETH->DMABMR);
   hal_eth_init_status = HAL_ETH_Init(&heth);
+  printf("DIAG_ETH: after HAL_ETH_Init status=%d tick=%lu\n", hal_eth_init_status, HAL_GetTick());
 
   memset(&TxConfig, 0 , sizeof(ETH_TxPacketConfig));
   TxConfig.Attributes = ETH_TX_PACKETS_FEATURES_CSUM | ETH_TX_PACKETS_FEATURES_CRCPAD;
@@ -246,18 +250,23 @@ static void low_level_init(struct netif *netif)
   #endif /* LWIP_ARP */
 
   /* create a binary semaphore used for informing ethernetif of frame reception */
+  printf("DIAG_ETH: creating RxPktSemaphore\n");
   RxPktSemaphore = osSemaphoreNew(1, 0, NULL);
+  printf("DIAG_ETH: RxPktSemaphore=%p\n", RxPktSemaphore);
 
   /* create a binary semaphore used for informing ethernetif of frame transmission */
   TxPktSemaphore = osSemaphoreNew(1, 0, NULL);
+  printf("DIAG_ETH: TxPktSemaphore=%p\n", TxPktSemaphore);
 
   /* create the task that handles the ETH_MAC */
 /* USER CODE BEGIN OS_THREAD_NEW_CMSIS_RTOS_V2 */
+  printf("DIAG_ETH: creating EthIf thread\n");
   memset(&attributes, 0x0, sizeof(osThreadAttr_t));
   attributes.name = "EthIf";
   attributes.stack_size = INTERFACE_THREAD_STACK_SIZE;
   attributes.priority = osPriorityRealtime;
   osThreadNew(ethernetif_input, netif, &attributes);
+  printf("DIAG_ETH: EthIf thread created\n");
 /* USER CODE END OS_THREAD_NEW_CMSIS_RTOS_V2 */
 
 /* USER CODE BEGIN PHY_PRE_CONFIG */
@@ -267,12 +276,17 @@ static void low_level_init(struct netif *netif)
   LAN8742_RegisterBusIO(&LAN8742, &LAN8742_IOCtx);
 
   /* Initialize the LAN8742 ETH PHY */
-  if(LAN8742_Init(&LAN8742) != LAN8742_STATUS_OK)
+  printf("DIAG_ETH: before LAN8742_Init\n");
+  int32_t lan8742_status = LAN8742_Init(&LAN8742);
+  printf("DIAG_ETH: after LAN8742_Init status=%d DevAddr=%lu\n", lan8742_status, LAN8742.DevAddr);
+  if(lan8742_status != LAN8742_STATUS_OK)
   {
     netif_set_link_down(netif);
     netif_set_down(netif);
+    printf("DIAG_ETH: PHY init FAILED, returning early\n");
     return;
   }
+  printf("DIAG_ETH: PHY init OK, DevAddr=%lu\n", LAN8742.DevAddr);
 
   if (hal_eth_init_status == HAL_OK)
   {
@@ -281,6 +295,7 @@ static void low_level_init(struct netif *netif)
     /* Get link state */
     if(PHYLinkState <= LAN8742_STATUS_LINK_DOWN)
     {
+      printf("PHY_DIAG: Link DOWN (PHYLinkState=%ld)\n", PHYLinkState);
       netif_set_link_down(netif);
       netif_set_down(netif);
     }
@@ -316,9 +331,11 @@ static void low_level_init(struct netif *netif)
     MACConf.Speed = speed;
     HAL_ETH_SetMACConfig(&heth, &MACConf);
 
+    printf("PHY_DIAG: Calling HAL_ETH_Start_IT\n");
     HAL_ETH_Start_IT(&heth);
     netif_set_up(netif);
     netif_set_link_up(netif);
+    printf("PHY_DIAG: Link UP (speed=%lu duplex=%lu)\n", speed, duplex);
 
 /* USER CODE BEGIN PHY_POST_CONFIG */
 
@@ -645,7 +662,8 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef* ethHandle)
     HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
   /* USER CODE BEGIN ETH_MspInit 1 */
-
+  HAL_NVIC_SetPriority(ETH_IRQn, 0x5, 0);
+  HAL_NVIC_EnableIRQ(ETH_IRQn);
   /* USER CODE END ETH_MspInit 1 */
   }
 }
@@ -678,6 +696,9 @@ void HAL_ETH_MspDeInit(ETH_HandleTypeDef* ethHandle)
     HAL_GPIO_DeInit(RMII_TXD1_GPIO_Port, RMII_TXD1_Pin);
 
     HAL_GPIO_DeInit(GPIOG, RMII_TX_EN_Pin|RMII_TXD0_Pin);
+
+    /* Peripheral interrupt Deinit*/
+    HAL_NVIC_DisableIRQ(ETH_IRQn);
 
   /* USER CODE BEGIN ETH_MspDeInit 1 */
 

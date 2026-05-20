@@ -40,7 +40,36 @@ Open `test439/LWIP/Target/lwipopts.h`, add inside `/* USER CODE BEGIN 1 */`:
 
 These defines survive code regeneration.
 
-### Post-generation: main.c
+### Post-generation: Bare-metal → FreeRTOS transition
+
+When you enable FreeRTOS in CubeMX, the generated LwIP code switches from polling (bare-metal) to interrupt mode. The following manual changes are needed:
+
+#### 0. main.c — call MX_LWIP_Init()
+
+CubeMX generates `MX_LWIP_Init()` in `LWIP/App/lwip.c` but does **not** always insert the call into `main.c`. Without it, LwIP and the Ethernet hardware are never initialized — no traffic flows.
+
+Open `test439/Core/Src/main.c` and add the include and call:
+
+```c
+/* USER CODE BEGIN Includes */
+#include "lwip.h"
+/* USER CODE END Includes */
+```
+
+```c
+  /* USER CODE BEGIN 2 */
+
+  /* USER CODE END 2 */
+
+  MX_LWIP_Init();             // ← add this before kernel start
+
+  /* Init scheduler */
+  osKernelInitialize();
+```
+
+`MX_LWIP_Init()` calls `tcpip_init()`, creates the Ethernet interface, and spawns the link-monitoring thread.
+
+#### 1. main.c — remove polling loop
 
 CubeMX generates `MX_LWIP_Process()` inside `main.c`'s while loop. This is for bare-metal mode. Since we use FreeRTOS, LwIP runs in its own `tcpip_thread` — replace it with `osDelay(100)`:
 
@@ -71,6 +100,41 @@ to:
 ```
 
 This change is inside `USER CODE` sections and survives re-generation.
+
+#### 2. stm32f4xx_it.c — add ETH interrupt handler
+
+CubeMX may not generate `ETH_IRQHandler`. Without it, the Ethernet interrupt goes to `Default_Handler` (system hang). Open `test439/Core/Src/stm32f4xx_it.c` and add inside `/* USER CODE BEGIN Includes */`:
+
+```c
+/* USER CODE BEGIN Includes */
+#include "stm32f4xx_hal_eth.h"
+extern ETH_HandleTypeDef heth;
+/* USER CODE END Includes */
+```
+
+Then add the handler inside `/* USER CODE BEGIN 1 */` at the bottom:
+
+```c
+/* USER CODE BEGIN 1 */
+void ETH_IRQHandler(void)
+{
+  HAL_ETH_IRQHandler(&heth);
+}
+/* USER CODE END 1 */
+```
+
+#### 3. ethernetif.c — enable ETH interrupt in NVIC
+
+The ETH HAL driver needs the NVIC interrupt unmasked. Open `test439/LWIP/Target/ethernetif.c`, find `HAL_ETH_MspInit()` and add inside `/* USER CODE BEGIN ETH_MspInit 1 */`:
+
+```c
+  /* USER CODE BEGIN ETH_MspInit 1 */
+  HAL_NVIC_SetPriority(ETH_IRQn, 0x5, 0);
+  HAL_NVIC_EnableIRQ(ETH_IRQn);
+  /* USER CODE END ETH_MspInit 1 */
+```
+
+This configures the NVIC to route Ethernet interrupts to `ETH_IRQHandler`.
 
 ## SNTP Time Sync
 

@@ -79,16 +79,18 @@ void MX_LWIP_Init(void)
 /* USER CODE BEGIN IP_ADDRESSES */
 /* USER CODE END IP_ADDRESSES */
 
-  /* Initialize the LwIP stack with RTOS */
+  printf("DIAG_LWIP: before tcpip_init\n");
   tcpip_init( NULL, NULL );
+  printf("DIAG_LWIP: after tcpip_init\n");
 
   /* IP addresses initialization without DHCP (IPv4) */
   IP4_ADDR(&ipaddr, IP_ADDRESS[0], IP_ADDRESS[1], IP_ADDRESS[2], IP_ADDRESS[3]);
   IP4_ADDR(&netmask, NETMASK_ADDRESS[0], NETMASK_ADDRESS[1] , NETMASK_ADDRESS[2], NETMASK_ADDRESS[3]);
   IP4_ADDR(&gw, GATEWAY_ADDRESS[0], GATEWAY_ADDRESS[1], GATEWAY_ADDRESS[2], GATEWAY_ADDRESS[3]);
 
-  /* add the network interface (IPv4/IPv6) with RTOS */
+  printf("DIAG_LWIP: before netif_add\n");
   netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &tcpip_input);
+  printf("DIAG_LWIP: after netif_add\n");
 
   /* Registers the default network interface */
   netif_set_default(&gnetif);
