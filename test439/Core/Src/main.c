@@ -109,8 +109,6 @@ int main(void)
   MX_GPIO_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-  MX_ETH_Init();
-  MX_LWIP_Init();
   /* USER CODE END 2 */
 
   /* Init scheduler */
