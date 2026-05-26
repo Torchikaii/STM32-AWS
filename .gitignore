@@ -1,13 +1,23 @@
+# IDE
 .idea
 .settings/language.settings.xml
 
-generate_script.txt
 
 test439/Drivers/
 test439/build/
 
+# secrets
+generate_script.txt
+
+# python
 venv
 
+# vim
 *.swp
 
+# kicad
 start-here-backups
+\#auto_saved_files#
+_autosave-*
+fp-info-cache
+*.lck

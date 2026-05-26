@@ -3,7 +3,7 @@
 	(generator "eeschema")
 	(generator_version "9.0")
 	(uuid "17528d94-ba45-490d-956e-557ea4d3e29a")
-	(paper "A4")
+	(paper "A3")
 	(lib_symbols
 		(symbol "Connector:RJ45_Hanrun_HR911105A_Horizontal"
 			(exclude_from_sim no)
@@ -5457,7 +5457,7 @@
 	)
 	(symbol
 		(lib_id "Regulator_Linear:AP7361C-10E")
-		(at 140.97 68.58 0)
+		(at 40.64 35.56 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5466,7 +5466,7 @@
 		(fields_autoplaced yes)
 		(uuid "8006b5c3-a3e3-4c02-a0c1-515e6635d4dd")
 		(property "Reference" "U3"
-			(at 140.97 62.23 0)
+			(at 40.64 29.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5474,7 +5474,7 @@
 			)
 		)
 		(property "Value" "AP7361C-10E"
-			(at 140.97 64.77 0)
+			(at 40.64 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5482,7 +5482,7 @@
 			)
 		)
 		(property "Footprint" "Package_TO_SOT_SMD:SOT-223-3_TabPin2"
-			(at 140.97 62.865 0)
+			(at 40.64 29.845 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5492,7 +5492,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.diodes.com/assets/Datasheets/AP7361C.pdf"
-			(at 140.97 69.85 0)
+			(at 40.64 36.83 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5501,7 +5501,7 @@
 			)
 		)
 		(property "Description" "1A Low Dropout regulator, positive, 1.0V fixed output, SOT-223"
-			(at 140.97 68.58 0)
+			(at 40.64 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5529,7 +5529,7 @@
 	)
 	(symbol
 		(lib_id "Connector:RJ45_Hanrun_HR911105A_Horizontal")
-		(at 157.48 118.11 0)
+		(at 294.64 189.23 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5538,7 +5538,7 @@
 		(fields_autoplaced yes)
 		(uuid "9f9f67ce-fc79-4c49-a3d4-2e01ca3af0f3")
 		(property "Reference" "J1"
-			(at 158.75 104.14 0)
+			(at 295.91 175.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5546,7 +5546,7 @@
 			)
 		)
 		(property "Value" "RJ45_Hanrun_HR911105A_Horizontal"
-			(at 158.75 106.68 0)
+			(at 295.91 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5554,7 +5554,7 @@
 			)
 		)
 		(property "Footprint" "Connector_RJ:RJ45_Hanrun_HR911105A_Horizontal"
-			(at 157.48 105.41 0)
+			(at 294.64 176.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5563,7 +5563,7 @@
 			)
 		)
 		(property "Datasheet" "https://datasheet.lcsc.com/lcsc/1811141815_HANRUN-Zhongshan-HanRun-Elec-HR911105A_C12074.pdf"
-			(at 157.48 102.87 0)
+			(at 294.64 173.99 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5572,7 +5572,7 @@
 			)
 		)
 		(property "Description" "1 Port RJ45 Magjack Connector Through Hole 10/100 Base-T, AutoMDIX"
-			(at 157.48 118.11 0)
+			(at 294.64 189.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5630,7 +5630,7 @@
 	)
 	(symbol
 		(lib_id "MCU_ST_STM32F4:STM32F439ZITx")
-		(at 59.69 105.41 0)
+		(at 209.55 134.62 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5639,7 +5639,7 @@
 		(fields_autoplaced yes)
 		(uuid "d169c1cc-e9b0-43ad-908c-63aab5e04f29")
 		(property "Reference" "U1"
-			(at 64.3733 196.85 0)
+			(at 214.2333 226.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5648,7 +5648,7 @@
 			)
 		)
 		(property "Value" "STM32F439ZITx"
-			(at 64.3733 199.39 0)
+			(at 214.2333 228.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5657,7 +5657,7 @@
 			)
 		)
 		(property "Footprint" "Package_QFP:LQFP-144_20x20mm_P0.5mm"
-			(at 31.75 194.31 0)
+			(at 181.61 223.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5667,7 +5667,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.st.com/resource/en/datasheet/stm32f439zi.pdf"
-			(at 59.69 105.41 0)
+			(at 209.55 134.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5676,7 +5676,7 @@
 			)
 		)
 		(property "Description" "STMicroelectronics Arm Cortex-M4 MCU, 2048KB flash, 256KB RAM, 180 MHz, 1.7-3.6V, 114 GPIO, LQFP144"
-			(at 59.69 105.41 0)
+			(at 209.55 134.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6127,7 +6127,7 @@
 	)
 	(symbol
 		(lib_id "Interface_Ethernet:LAN8742A")
-		(at 215.9 77.47 0)
+		(at 353.06 148.59 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -6136,7 +6136,7 @@
 		(fields_autoplaced yes)
 		(uuid "e3f029d0-271d-4020-b94a-fe2b8891a36d")
 		(property "Reference" "U2"
-			(at 218.0433 105.41 0)
+			(at 355.2033 176.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6145,7 +6145,7 @@
 			)
 		)
 		(property "Value" "LAN8742A"
-			(at 218.0433 107.95 0)
+			(at 355.2033 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6154,7 +6154,7 @@
 			)
 		)
 		(property "Footprint" "Package_DFN_QFN:VQFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm_ThermalVias"
-			(at 217.17 104.14 0)
+			(at 354.33 175.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6164,7 +6164,7 @@
 			)
 		)
 		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/8742a.pdf"
-			(at 215.9 116.84 0)
+			(at 353.06 187.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6173,7 +6173,7 @@
 			)
 		)
 		(property "Description" "LAN8720 Ethernet PHY with RMII interface, QFN-24"
-			(at 215.9 77.47 0)
+			(at 353.06 148.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
