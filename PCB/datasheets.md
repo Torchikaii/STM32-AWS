@@ -14,3 +14,7 @@ Ethernet PHY (LAN8742A)
 https://ww1.microchip.com/downloads/aemDocuments/documents/OTH/ProductDocuments/DataSheets/DS_LAN8742_00001989A.pdf
 ```
 
+RJ45 connector with ethernet transformer (HR911105)
+```
+https://www.sunrom.com/download/338.pdf
+```
