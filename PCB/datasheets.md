@@ -1,3 +1,8 @@
+MCU
+```
+https://www.st.com/resource/en/datasheet/stm32f439zi.pdf
+```
+
 Power supply (AP7361C)
 
 ```
