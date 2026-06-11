@@ -23,3 +23,9 @@ RJ45 connector with ethernet transformer (HR911105)
 ```
 https://www.sunrom.com/download/338.pdf
 ```
+
+USB connector
+```
+https://gct.co/files/specs/usb4125-spec.pdf
+https://gct.co/files/drawings/usb4125.pdf
+```
