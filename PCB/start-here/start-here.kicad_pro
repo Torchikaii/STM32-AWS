@@ -226,7 +226,16 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [],
+    "erc_exclusions": [
+      [
+        "power_pin_not_driven|3505200|1181100|506d7801-d4bf-431f-a039-580a03a756d2|00000000-0000-0000-0000-000000000000|/17528d94-ba45-490d-956e-557ea4d3e29a|/17528d94-ba45-490d-956e-557ea4d3e29a|",
+        "external power here is optional, see datasheet"
+      ],
+      [
+        "power_pin_not_driven|3556000|1181100|15d6d6db-c12f-4f8a-8f80-2be20324e353|00000000-0000-0000-0000-000000000000|/17528d94-ba45-490d-956e-557ea4d3e29a|/17528d94-ba45-490d-956e-557ea4d3e29a|",
+        "It is connected to power, just through ferrite bead, as shown in datasheet"
+      ]
+    ],
     "meta": {
       "version": 0
     },
